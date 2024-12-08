@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "548356655847",
+    "project_id": "gain-wave",
+    "storage_bucket": "gain-wave.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548356655847:android:707d20f8ccdc384710b042",
+        "android_client_info": {
+          "package_name": "com.example.gain_wave_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8XrUsqS1jEAz21CpSX8HXmHRblGqC0fI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
