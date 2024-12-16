@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gain_wave_app/Views/ChatApp/ChatAppView.dart';
 import 'package:gain_wave_app/Views/Home/HomePageView.dart';
+import 'package:gain_wave_app/main.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -24,6 +27,26 @@ class _page_control_navState extends State<page_control_nav> {
       child: Text('profile',style: TextStyle(color: textMain),),
     )
   ];
+
+    _getUserData(){
+     firebaseServices.getUserData();
+    setState(() {
+      log('From NavControl: ${firebaseServices.FirstName}');
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _getUserData();
+    super.initState();
+    
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +76,7 @@ class _page_control_navState extends State<page_control_nav> {
                       setState(() {
                         index = value;
                       });
-                      print(index);
+                      log('$index');
                     },
                     tabActiveBorder: Border.all(color: accentMain),
                     backgroundColor: secondaryBG,

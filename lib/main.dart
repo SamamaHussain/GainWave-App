@@ -8,14 +8,15 @@ import 'package:gain_wave_app/PageControlNav.dart';
 import 'package:gain_wave_app/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gain_wave_app/utillities/FirebaseServices/FirebaseServices.dart';
+import 'package:gain_wave_app/utillities/FirebaseServices/FirestoreFuncs.dart';
 
     FirebaseServices firebaseServices= FirebaseServices();
+    FirestoreFuncs firestoreFuncs= FirestoreFuncs();
 void main() async {
   dotenv.load();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,

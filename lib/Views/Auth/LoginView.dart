@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/main.dart';
@@ -20,8 +22,8 @@ class _login_viewState extends State<login_view> {
 @override
   void dispose() {
     // TODO: implement dispose
-    _passwordController.dispose();
-    _passwordController.dispose();
+    _passwordController.clear();
+    _passwordController.clear();
     super.dispose();
   }
   
@@ -94,10 +96,12 @@ class _login_viewState extends State<login_view> {
               ),
               SizedBox(height: 25),
               SizedBox( width: double.infinity, 
+              //Login Button TODO
               child: ElevatedButton( onPressed: () {
                 firebaseServices.login(_emailController.text,_passwordController.text,context);
-                print(_emailController.text);
-                print(_passwordController.text);
+                log(_emailController.text);
+                log(_passwordController.text);
+                log('From LoginButoon: ${firebaseServices.FirstName}');
 
                 if(firebaseServices.errorCodeLogin=='invalid-credential'){
                   showSnackBar(context, 'Wrong email or password');

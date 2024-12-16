@@ -75,7 +75,7 @@ class _email_verifyState extends State<email_verify> {
                   ),
                   recognizer: TapGestureRecognizer()
                   ..onTap = ()async {
-                    firebaseServices.GetCurrentUser();
+                    firebaseServices.GetCurrentUserID();
                   if(firebaseServices.user!=null){
                     firebaseServices.sign_out();
                   }

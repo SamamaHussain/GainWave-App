@@ -1,10 +1,18 @@
+
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/main.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class home_page_view extends StatelessWidget {
+class home_page_view extends StatefulWidget {
   const home_page_view({super.key});
+
+  @override
+  State<home_page_view> createState() => _home_page_viewState();
+}
+
+class _home_page_viewState extends State<home_page_view> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +24,7 @@ class home_page_view extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'Home',
+                'Hello ${firebaseServices.FirstName}!',
                 textAlign: TextAlign.start,
                 style: GoogleFonts.roboto(
                   color: textMain,

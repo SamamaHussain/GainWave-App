@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gain_wave_app/Views/Auth/LoginView.dart';
 import 'package:gain_wave_app/PageControlNav.dart';
+import 'package:gain_wave_app/Views/Auth/RegisterView.dart';
 
 class auth_view extends StatelessWidget {
   const auth_view({super.key});
@@ -12,10 +12,11 @@ class auth_view extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if(snapshot.hasData){
+
           return const page_control_nav();
           }
           else{
-            return login_view();
+            return register_view();
           //  Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (_) => false);
           }
         },
