@@ -34,7 +34,7 @@ Future <void> saveUser (String? Uid,String FirstName,String LastName,String Emai
         String firstName=userDoc['FirstName'];
         String lastName=userDoc['LastName'];
         Map<String,String>? NameMap={'firstName':firstName,'lastName':lastName};
-        log('From GetUser Func: ${Uid}');
+        log('From GetUser Func: $Uid');
         return NameMap;
        }
        else{

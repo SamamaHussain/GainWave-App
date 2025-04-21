@@ -16,7 +16,7 @@ class auth_view extends StatelessWidget {
           return const page_control_nav();
           }
           else{
-            return register_view();
+            return const register_view();
           //  Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (_) => false);
           }
         },

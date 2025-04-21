@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gain_wave_app/main.dart';
 
-class FirebaseServices {
+class FirebaseServices extends ChangeNotifier {
   String? errorCodeLogin;
   String? errorCodeSignup;
   User? user;
@@ -14,6 +14,7 @@ class FirebaseServices {
   String? uid;
   String? FirstName;
   String? LastName;
+  bool isLoading = true;
 
      final TextEditingController EmailController=TextEditingController();
    final TextEditingController PasswordController=TextEditingController();
@@ -26,9 +27,12 @@ class FirebaseServices {
     // if(userCredential!=null){
     //   uid=userCredential!.user!.uid;
     // }
+     notifyListeners();
   }
 
   Future<void> getUserData() async {
+    isLoading = true;
+     notifyListeners();
       user= FirebaseAuth.instance.currentUser;
       uid=user?.uid;
       log('Uid from GetUserData: $uid');
@@ -37,7 +41,10 @@ class FirebaseServices {
       FirstName = userData['firstName'];
       log('getUserData: $FirstName');
       LastName = userData['lastName'];
+       notifyListeners();
     }
+    isLoading = false;
+    notifyListeners();
   }
 
   void login(String email,String password,BuildContext Context) async {
@@ -48,8 +55,10 @@ class FirebaseServices {
       uid=user?.uid;
       log('From login Func: $uid');
       isEmailVerified = user!.emailVerified;
+       notifyListeners();
       if(user!=null){
       if (isEmailVerified == true) {
+        getUserData();
       Navigator.of(Context).pushNamedAndRemoveUntil(
         '/homeRoute',
         (route) => false,

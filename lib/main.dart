@@ -9,6 +9,7 @@ import 'package:gain_wave_app/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gain_wave_app/utillities/FirebaseServices/FirebaseServices.dart';
 import 'package:gain_wave_app/utillities/FirebaseServices/FirestoreFuncs.dart';
+import 'package:provider/provider.dart';
 
     FirebaseServices firebaseServices= FirebaseServices();
     FirestoreFuncs firestoreFuncs= FirestoreFuncs();
@@ -17,8 +18,20 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(
-    MaterialApp(
+  runApp(const MyApp() );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(providers: [
+      ChangeNotifierProvider<FirebaseServices>(
+        create: (context) => firebaseServices,
+      ),
+    ],
+    child: MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'GainWave App',
       theme: ThemeData( 
@@ -26,6 +39,7 @@ void main() async {
         useMaterial3: false,
       ),
       home: const auth_view(),
+      
       routes: {
           '/loginRoute': (context) => const login_view(),
           '/registerRoute': (context) => const register_view(),
@@ -34,6 +48,7 @@ void main() async {
         },
     ),
     
-  );
+    );
+  }
 }
 

@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:gain_wave_app/main.dart';
+import 'package:gain_wave_app/utillities/FirebaseServices/FirebaseServices.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class home_page_view extends StatefulWidget {
   const home_page_view({super.key});
@@ -14,14 +15,18 @@ class home_page_view extends StatefulWidget {
 class _home_page_viewState extends State<home_page_view> {
 
 
+
   @override
   Widget build(BuildContext context) {
+    final firebaseServices = Provider.of<FirebaseServices>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: primaryBG,
         body: Padding(
           padding: EdgeInsets.fromLTRB(16, 30, 16, 30),
-          child: Row(
+          child: firebaseServices.isLoading
+              ? Center(child: CircularProgressIndicator(color: Colors.white)) // ⬅️ Loading spinner
+              : Row(
             children: [
               Text(
                 'Hello ${firebaseServices.FirstName}!',

@@ -1,9 +1,9 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gain_wave_app/Views/ChatApp/ChatAppView.dart';
 import 'package:gain_wave_app/Views/Home/HomePageView.dart';
+import 'package:gain_wave_app/Views/Performance/UI/exerciseLibrary.dart';
+import 'package:gain_wave_app/Views/User%20Profle/profilePage.dart';
 import 'package:gain_wave_app/main.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -17,15 +17,11 @@ class page_control_nav extends StatefulWidget {
 class _page_control_navState extends State<page_control_nav> {
   var index = 0;
 
-  final total_screens = [
+  final total_screens = const [
     home_page_view(),
-    Center(
-      child: Text('Performance',style: TextStyle(color: textMain),),
-    ),
+    ExerciseLibraryPage(),
     GymChatBot(),
-    Center(
-      child: Text('profile',style: TextStyle(color: textMain),),
-    )
+    ProfilePage(),
   ];
 
     _getUserData(){
@@ -70,34 +66,38 @@ class _page_control_navState extends State<page_control_nav> {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: GNav(
-                    selectedIndex: index,
-                    onTabChange: (value) {
-                      setState(() {
-                        index = value;
-                      });
-                      log('$index');
-                    },
-                    tabActiveBorder: Border.all(color: accentMain),
-                    backgroundColor: secondaryBG,
-                    color: textMain,
-                    activeColor: accentMain,
-                    gap: 8,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
-                    duration: Duration(milliseconds: 350),
-                    tabs: [
-                      GButton(icon: Icons.home, text: 'Home',),
-                      GButton(
-                          icon: Icons.query_stats_rounded, text: 'Performance'),
-                      GButton(
-                        icon: Icons.question_answer,
-                        text: 'AskChat',
-                        onPressed: () {
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => GymChatBot(),));
-                        },
-                      ),
-                      GButton(icon: Icons.person, text: 'Profile'),
-                    ],
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: GNav(
+                      selectedIndex: index,
+                      onTabChange: (value) {
+                        setState(() {
+                          index = value;
+                        });
+                        log('$index');
+                      },
+                      tabActiveBorder: Border.all(color: accentMain),
+                      backgroundColor: secondaryBG,
+                      color: textMain,
+                      activeColor: accentMain,
+                      gap: 8,
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+                      duration: const Duration(milliseconds: 350),
+                      tabs: [
+                        GButton(icon: Icons.home, text: 'Home',),
+                        GButton(
+                            icon: Icons.query_stats_rounded, text: 'Exercise'),
+                        GButton(
+                          icon: Icons.question_answer,
+                          text: 'AskChat',
+                          onPressed: () {
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => GymChatBot(),));
+                          },
+                        ),
+                        GButton(icon: Icons.person, text: 'Profile'),
+                      ],
+                    ),
                   ),
                 ),
               ),
