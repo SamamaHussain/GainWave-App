@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gain_wave_app/Views/ChatApp/ChatAppView.dart';
+import 'package:gain_wave_app/Views/Muscle%20Volume/muscleVolume.dart';
 import 'package:gain_wave_app/Views/Performance/Model/exerciseModel.dart';
 import 'package:gain_wave_app/Views/Performance/Exercise%20Data/exercisesList.dart';
 import 'package:gain_wave_app/Views/Performance/UI/storeStats/storestats.dart';
@@ -34,6 +36,7 @@ class _ExerciseLibraryPageState extends State<ExerciseLibraryPage> {
       return matchesFilter && matchesSearch;
     }).toList();
   }
+
 
   @override
   void initState() {
@@ -154,6 +157,56 @@ class _ExerciseLibraryPageState extends State<ExerciseLibraryPage> {
           ),
         ],
       ),
+floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+floatingActionButton: Container(
+  decoration: BoxDecoration(
+    boxShadow: [
+      BoxShadow(
+        color: Colors.green.withOpacity(0.5),
+        spreadRadius: 2,
+        blurRadius: 5,
+        offset: const Offset(0, 3),
+      ),
+    ],
+  ),
+  child: ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), backgroundColor: Colors.white,
+      elevation: 5,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+    ),
+    onPressed: () {
+       showModalBottomSheet(
+  context: context,
+  isScrollControlled: true,
+  backgroundColor: Colors.transparent,
+  builder: (context) => DraggableScrollableSheet(
+    initialChildSize: 0.7,
+    minChildSize: 0.25,
+    maxChildSize: 0.95,
+    expand: false,
+    builder: (context, scrollController) {
+      return VolumeTrackerScreen(
+        scrollController: scrollController,
+        onClose: () => Navigator.pop(context),
+      );
+    },
+  ),
+);
+    },
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.balance_rounded),
+        const SizedBox(width: 8),
+        const Text('Track Muscle Volume'),
+      ],
+    ),
+  ),
+),
+
+
+
     );
   }
 }
@@ -1018,4 +1071,7 @@ class _RestTimerDialogState extends State<RestTimerDialog> with SingleTickerProv
       ],
     );
   }
+  
 }
+
+// Use this to open the sheet from any button:

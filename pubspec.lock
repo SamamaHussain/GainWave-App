@@ -190,6 +190,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.1"
+  flutter_hooks:
+    dependency: "direct main"
+    description:
+      name: flutter_hooks
+      sha256: b772e710d16d7a20c0740c4f855095026b31c7eb5ba3ab67d2bd52021cd9461d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.21.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -248,6 +256,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.2"
   leak_tracker:
     dependency: transitive
     description:

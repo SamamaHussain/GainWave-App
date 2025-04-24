@@ -5,6 +5,8 @@ import 'package:gain_wave_app/Views/Auth/EmailVerificationView.dart';
 import 'package:gain_wave_app/Views/Auth/LoginView.dart';
 import 'package:gain_wave_app/Views/Auth/RegisterView.dart';
 import 'package:gain_wave_app/PageControlNav.dart';
+import 'package:gain_wave_app/Views/Muscle%20Volume/muscleVolume.dart';
+import 'package:gain_wave_app/Views/Workout%20Planning/workoutPlanning.dart';
 import 'package:gain_wave_app/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gain_wave_app/utillities/FirebaseServices/FirebaseServices.dart';
