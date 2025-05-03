@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/utillities/FirebaseServices/FirebaseServices.dart';
+import 'package:gain_wave_app/utillities/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -11,47 +13,59 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
-void initState() {
-  super.initState();
-  // Fetch user data when the profile page loads
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    final firebaseServices = Provider.of<FirebaseServices>(context, listen: false);
-    firebaseServices.getUserData();
-  });
-}
+  void initState() {
+    super.initState();
+    // Fetch user data when the profile page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final firebaseServices = Provider.of<FirebaseServices>(context, listen: false);
+      firebaseServices.getUserData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<FirebaseServices>(
       builder: (context, firebaseServices, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Profile'),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () {
-                  _showLogoutConfirmation(context, firebaseServices);
-                },
-              ),
-            ],
-          ),
-          body: firebaseServices.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildProfileHeader(context, firebaseServices),
-                      const SizedBox(height: 24),
-                      _buildProfileInfo(firebaseServices),
-                      const SizedBox(height: 24),
-                      _buildAccountActions(context),
-                    ],
-                  ),
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: primaryBG,
+            appBar: AppBar(
+              backgroundColor: primaryBG,
+              elevation: 0,
+              title: Text(
+                'Profile',
+                style: GoogleFonts.roboto(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.logout_rounded, color: Colors.white),
+                  onPressed: () {
+                    _showLogoutConfirmation(context, firebaseServices);
+                  },
+                ),
+              ],
+            ),
+            body: firebaseServices.isLoading
+                ? const Center(child: CircularProgressIndicator(color: Colors.white))
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildProfileHeader(context, firebaseServices),
+                        const SizedBox(height: 30),
+                        _buildProfileInfo(context, firebaseServices),
+                        const SizedBox(height: 20),
+                        _buildAccountActions(context),
+                      ],
+                    ),
+                  ),
+          ),
         );
       },
     );
@@ -61,32 +75,41 @@ void initState() {
     return Center(
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
-            child: Text(
-              _getInitials(firebaseServices.FirstName, firebaseServices.LastName),
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              color: accentMain.withOpacity(0.3),
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              radius: 50,
+              backgroundColor: const Color.fromARGB(255, 41, 61, 23),
+              child: Text(
+                _getInitials(firebaseServices.FirstName, firebaseServices.LastName),
+                style: GoogleFonts.roboto(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: accentMain,
+                ),
               ),
             ),
           ),
           const SizedBox(height: 16),
           Text(
             '${firebaseServices.FirstName ?? ''} ${firebaseServices.LastName ?? ''}',
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+            style: GoogleFonts.roboto(
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              color: accentMain,
+              letterSpacing: -0.5,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             firebaseServices.user?.email ?? '',
-            style: TextStyle(
+            style: GoogleFonts.roboto(
               fontSize: 16,
-              color: Colors.grey[600],
+              color: Colors.white70,
             ),
           ),
         ],
@@ -94,30 +117,54 @@ void initState() {
     );
   }
 
-  Widget _buildProfileInfo(FirebaseServices firebaseServices) {
+  Widget _buildProfileInfo(BuildContext context, FirebaseServices firebaseServices) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      color: secondaryBG,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Account Information',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 41, 61, 23),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.person_outline_rounded, 
+                    size: 35, 
+                    color: accentMain
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  'Account Information',
+                  style: GoogleFonts.roboto(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-            const Divider(),
+            const Divider(
+              color: Colors.white24,
+              height: 40,
+            ),
             _infoRow(
-              icon: Icons.person_outline,
+              icon: Icons.person_outline_rounded,
               title: 'First Name',
               value: firebaseServices.FirstName ?? 'Not set',
             ),
             _infoRow(
-              icon: Icons.person_outline,
+              icon: Icons.person_outline_rounded,
               title: 'Last Name',
               value: firebaseServices.LastName ?? 'Not set',
             ),
@@ -148,18 +195,19 @@ void initState() {
     required String value,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: Colors.grey[600]),
-          const SizedBox(width: 8),
+          Icon(icon, size: 20, color: Colors.white70),
+          const SizedBox(width: 12),
           Expanded(
             flex: 2,
             child: Text(
               title,
-              style: const TextStyle(
+              style: GoogleFonts.roboto(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
+                color: Colors.white,
               ),
             ),
           ),
@@ -167,9 +215,9 @@ void initState() {
             flex: 3,
             child: Text(
               value,
-              style: TextStyle(
+              style: GoogleFonts.roboto(
                 fontSize: 16,
-                color: Colors.grey[800],
+                color: Colors.white70,
               ),
             ),
           ),
@@ -180,62 +228,90 @@ void initState() {
 
   Widget _buildAccountActions(BuildContext context) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        children: [
-          _actionTile(
-            context,
-            icon: Icons.edit,
-            title: 'Edit Profile',
-            onTap: () {
-              // Navigate to edit profile page
-              // Navigator.of(context).pushNamed('/editProfileRoute');
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Edit profile functionality coming soon')),
-              );
-            },
-          ),
-          const Divider(height: 1, indent: 56),
-          _actionTile(
-            context,
-            icon: Icons.lock_outline,
-            title: 'Change Password',
-            onTap: () {
-              // Navigate to change password page
-              // Navigator.of(context).pushNamed('/changePasswordRoute');
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Change password functionality coming soon')),
-              );
-            },
-          ),
-          const Divider(height: 1, indent: 56),
-          _actionTile(
-            context,
-            icon: Icons.settings_outlined,
-            title: 'App Settings',
-            onTap: () {
-              // Navigate to settings page
-              // Navigator.of(context).pushNamed('/settingsRoute');
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Settings functionality coming soon')),
-              );
-            },
-          ),
-          const Divider(height: 1, indent: 56),
-          _actionTile(
-            context,
-            icon: Icons.help_outline,
-            title: 'Help & Support',
-            onTap: () {
-              // Navigate to help page
-              // Navigator.of(context).pushNamed('/helpRoute');
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Help & Support functionality coming soon')),
-              );
-            },
-          ),
-        ],
+      elevation: 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      color: secondaryBG,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 41, 61, 23),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.settings_outlined, 
+                    size: 35, 
+                    color: accentMain
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  'Account Options',
+                  style: GoogleFonts.roboto(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            const Divider(
+              color: Colors.white24,
+              height: 40,
+            ),
+            _actionTile(
+              context,
+              icon: Icons.edit_rounded,
+              title: 'Edit Profile',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Edit profile functionality coming soon')),
+                );
+              },
+            ),
+            const Divider(color: Colors.white12, height: 1),
+            _actionTile(
+              context,
+              icon: Icons.lock_outline_rounded,
+              title: 'Change Password',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Change password functionality coming soon')),
+                );
+              },
+            ),
+            const Divider(color: Colors.white12, height: 1),
+            _actionTile(
+              context,
+              icon: Icons.settings_outlined,
+              title: 'App Settings',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Settings functionality coming soon')),
+                );
+              },
+            ),
+            const Divider(color: Colors.white12, height: 1),
+            _actionTile(
+              context,
+              icon: Icons.help_outline_rounded,
+              title: 'Help & Support',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Help & Support functionality coming soon')),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -247,9 +323,16 @@ void initState() {
     required VoidCallback onTap,
   }) {
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).primaryColor),
-      title: Text(title),
-      trailing: const Icon(Icons.chevron_right),
+      leading: Icon(icon, color: accentMain),
+      title: Text(
+        title,
+        style: GoogleFonts.roboto(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: const Icon(Icons.chevron_right_rounded, color: Colors.white70),
       onTap: onTap,
     );
   }
@@ -259,12 +342,28 @@ void initState() {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
+          backgroundColor: secondaryBG,
+          title: Text(
+            'Logout',
+            style: GoogleFonts.roboto(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to logout?',
+            style: GoogleFonts.roboto(color: Colors.white),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('CANCEL'),
+              child: Text(
+                'CANCEL',
+                style: GoogleFonts.roboto(color: Colors.white70),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -274,7 +373,10 @@ void initState() {
                   (route) => false,
                 );
               },
-              child: const Text('LOGOUT'),
+              child: Text(
+                'LOGOUT',
+                style: GoogleFonts.roboto(color: accentMain),
+              ),
             ),
           ],
         );

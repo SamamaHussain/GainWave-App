@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/main.dart';
@@ -7,15 +6,15 @@ import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:gain_wave_app/utillities/widgets/CustomWidgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class login_view extends StatefulWidget {
-  const login_view({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
 
   @override
-  State<login_view> createState() => _login_viewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _login_viewState extends State<login_view> {
+class _LoginViewState extends State<LoginView> {
      final TextEditingController _emailController=TextEditingController();
     final TextEditingController _passwordController=TextEditingController();
 
@@ -42,7 +41,7 @@ class _login_viewState extends State<login_view> {
                 ),
             child: IntrinsicHeight(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16, 30, 16, 30),
+                padding:const  EdgeInsets.fromLTRB(16, 30, 16, 30),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -55,7 +54,7 @@ class _login_viewState extends State<login_view> {
                         letterSpacing: -2,
                       ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Text('Email',
                         textAlign: TextAlign.start,
                         style: GoogleFonts.roboto(
@@ -65,20 +64,20 @@ class _login_viewState extends State<login_view> {
                         letterSpacing: -0.5,
                       ),
                       ),
-                      SizedBox(height: 10),
+                     const  SizedBox(height: 10),
                     TextField(
                       controller: _emailController,
-                      style: TextStyle(color: Colors.white),
+                      style:const  TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                     focusedBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
-                    enabledBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 25.0,horizontal: 12),
+                     focusedBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
+                    enabledBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
+                    contentPadding:const  EdgeInsets.symmetric(vertical: 25.0,horizontal: 12),
                     hintText: 'johndoel@mail.com',
-                    hintStyle: GoogleFonts.roboto(color: Color(0xFFC1C1C1),letterSpacing: -0.5,), 
+                    hintStyle: GoogleFonts.roboto(color:const  Color(0xFFC1C1C1),letterSpacing: -0.5,), 
                     filled: false,
                   ),
                     ),
-                    SizedBox(height: 15),
+                   const  SizedBox(height: 15),
                     Text('Password',
                         textAlign: TextAlign.start,
                         style: GoogleFonts.roboto(
@@ -89,20 +88,21 @@ class _login_viewState extends State<login_view> {
                       ),
                       ),
                       
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
+                      obscureText: true,
                       controller: _passwordController,
-                      style: TextStyle(color: Colors.white),
+                      style:const  TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                     focusedBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
-                    enabledBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 25.0,horizontal: 16),
+                     focusedBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
+                    enabledBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
+                    contentPadding:const  EdgeInsets.symmetric(vertical: 25.0,horizontal: 16),
                     hintText: '*******',
-                    hintStyle: GoogleFonts.roboto(color: Color(0xFFC1C1C1),letterSpacing: -0.5,), 
+                    hintStyle: GoogleFonts.roboto(color:const  Color(0xFFC1C1C1),letterSpacing: -0.5,), 
                     filled: false,
                   ),
                     ),
-                    SizedBox(height: 25),
+                   const  SizedBox(height: 25),
                     SizedBox( width: double.infinity, 
                     //Login Button TODO
                     child: ElevatedButton( onPressed: () {
@@ -115,7 +115,7 @@ class _login_viewState extends State<login_view> {
                         showSnackBar(context, 'Wrong email or password');
                       }
                       }, 
-                      style: ElevatedButton.styleFrom( padding: EdgeInsets.symmetric(vertical: 25.0), backgroundColor:accentMain, 
+                      style: ElevatedButton.styleFrom( padding:const  EdgeInsets.symmetric(vertical: 25.0), backgroundColor:accentMain, 
                       shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0), ), ), 
                       child: Text( 'Login', 
                       

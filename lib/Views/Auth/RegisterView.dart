@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:gain_wave_app/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class register_view extends StatefulWidget {
-  const register_view({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  State<register_view> createState() => _register_viewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _register_viewState extends State<register_view> {
+class _RegisterViewState extends State<RegisterView> {
 
 
     @override
@@ -42,7 +42,7 @@ void showSnackBar(BuildContext context,String message) {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFF212121),
+        backgroundColor:const  Color(0xFF212121),
         body: LayoutBuilder(builder: (context, constraints) {
           return SingleChildScrollView(
             child: ConstrainedBox(
@@ -51,7 +51,7 @@ void showSnackBar(BuildContext context,String message) {
                   ),
             child: IntrinsicHeight(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16, 30, 16, 30),
+                padding:const  EdgeInsets.fromLTRB(16, 30, 16, 30),
                 child: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +65,7 @@ void showSnackBar(BuildContext context,String message) {
                         letterSpacing: -2,
                       ),
                       ),
-                      SizedBox(height: 30),
+                    const   SizedBox(height: 30),
                     Text('First Name',
                         textAlign: TextAlign.start,
                         style: GoogleFonts.roboto(
@@ -75,22 +75,22 @@ void showSnackBar(BuildContext context,String message) {
                         letterSpacing: -0.5,
                       ),
                       ),
-                      SizedBox(height: 10),
+                    const   SizedBox(height: 10),
                     TextField(
                       controller: firebaseServices.FirstNameController,
                       decoration: InputDecoration(
-                     focusedBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
+                     focusedBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
                     // border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),
                     // borderSide: BorderSide(color: Colors.white),
                     // ),
-                    enabledBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 25.0,horizontal: 16),
+                    enabledBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
+                    contentPadding:const  EdgeInsets.symmetric(vertical: 25.0,horizontal: 16),
                     hintText: 'John',
-                    hintStyle: GoogleFonts.roboto(color: Color(0xFFC1C1C1),letterSpacing: -0.5,), 
+                    hintStyle: GoogleFonts.roboto(color:const  Color(0xFFC1C1C1),letterSpacing: -0.5,), 
                     filled: false,
                   ),
                     ),
-                    SizedBox(height: 15),
+                   const  SizedBox(height: 15),
                     Text('Last Name',
                         textAlign: TextAlign.start,
                         style: GoogleFonts.roboto(
@@ -100,22 +100,22 @@ void showSnackBar(BuildContext context,String message) {
                         letterSpacing: -0.5,
                       ),
                       ),
-                      SizedBox(height: 10),
+                     const  SizedBox(height: 10),
                     TextField(
                       controller: firebaseServices.LastNameController,
                       decoration: InputDecoration(
-                     focusedBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
+                     focusedBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
                     // border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),
                     // borderSide: BorderSide(color: Colors.white),
                     // ),
-                    enabledBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 25.0,horizontal: 16),
+                    enabledBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
+                    contentPadding:const  EdgeInsets.symmetric(vertical: 25.0,horizontal: 16),
                     hintText: 'Doel',
-                    hintStyle: GoogleFonts.roboto(color: Color(0xFFC1C1C1),letterSpacing: -0.5,), 
+                    hintStyle: GoogleFonts.roboto(color:const  Color(0xFFC1C1C1),letterSpacing: -0.5,), 
                     filled: false,
                   ),
                     ),
-                    SizedBox(height: 15),
+                   const  SizedBox(height: 15),
                       Text('Email',
                         textAlign: TextAlign.start,
                         style: GoogleFonts.roboto(
@@ -125,22 +125,22 @@ void showSnackBar(BuildContext context,String message) {
                         letterSpacing: -0.5,
                       ),
                       ),
-                       SizedBox(height: 10),
+                     const   SizedBox(height: 10),
                     TextField(
                       controller: firebaseServices.EmailController,
                       decoration: InputDecoration(
-                     focusedBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
+                     focusedBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
                     // border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),
                     // borderSide: BorderSide(color: Colors.white),
                     // ),
-                    enabledBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 25.0,horizontal: 12),
+                    enabledBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
+                    contentPadding:const  EdgeInsets.symmetric(vertical: 25.0,horizontal: 12),
                     hintText: 'johndoel@mail.com',
-                    hintStyle: GoogleFonts.roboto(color: Color(0xFFC1C1C1),letterSpacing: -0.5,), 
+                    hintStyle: GoogleFonts.roboto(color:const  Color(0xFFC1C1C1),letterSpacing: -0.5,), 
                     filled: false,
                   ),
                     ),
-                    SizedBox(height: 15),
+                   const  SizedBox(height: 15),
                     Text('Password',
                         textAlign: TextAlign.start,
                         style: GoogleFonts.roboto(
@@ -150,22 +150,22 @@ void showSnackBar(BuildContext context,String message) {
                         letterSpacing: -0.5,
                       ),
                       ),
-                      SizedBox(height: 10),
+                    const   SizedBox(height: 10),
                     TextField(
                       controller: firebaseServices.PasswordController,
                       decoration: InputDecoration(
-                     focusedBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
+                     focusedBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12.0), ),   
                     // border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),
                     // borderSide: BorderSide(color: Colors.white),
                     // ),
-                    enabledBorder: OutlineInputBorder( borderSide: BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 25.0,horizontal: 16),
+                    enabledBorder: OutlineInputBorder( borderSide:const  BorderSide(color: Colors.white, width: 1.0), borderRadius: BorderRadius.circular(12.0), ),
+                    contentPadding:const  EdgeInsets.symmetric(vertical: 25.0,horizontal: 16),
                     hintText: '*******',
-                    hintStyle: GoogleFonts.roboto(color: Color(0xFFC1C1C1),letterSpacing: -0.5,), 
+                    hintStyle: GoogleFonts.roboto(color:const  Color(0xFFC1C1C1),letterSpacing: -0.5,), 
                     filled: false,
                   ),
                     ),
-                    SizedBox(height: 25),
+                   const  SizedBox(height: 25),
                     SizedBox( width: double.infinity, 
                     child: ElevatedButton( onPressed: () async{ 
                       if (firebaseServices.FirstNameController.text.isEmpty || firebaseServices.LastNameController.text.isEmpty || firebaseServices.EmailController.text.isEmpty || firebaseServices.PasswordController.text.isEmpty) {
@@ -181,7 +181,7 @@ void showSnackBar(BuildContext context,String message) {
                       }
                       } 
                       }, 
-                      style: ElevatedButton.styleFrom( padding: EdgeInsets.symmetric(vertical: 25.0), backgroundColor: Color(0xFF9dff3b), 
+                      style: ElevatedButton.styleFrom( padding:const  EdgeInsets.symmetric(vertical: 25.0), backgroundColor:const  Color(0xFF9dff3b), 
                       shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0), ), ), 
                       child: Text( 'Sign up', 
                       
@@ -192,7 +192,7 @@ void showSnackBar(BuildContext context,String message) {
                         text: TextSpan( 
                         text: "Already have an account? ", 
                         style: GoogleFonts.roboto(
-                          color: Color.fromARGB(255, 255, 255, 255),
+                          color:const  Color.fromARGB(255, 255, 255, 255),
                           fontSize: 17,
                           fontWeight: FontWeight.w400,
                           letterSpacing: -0.5,
@@ -200,7 +200,7 @@ void showSnackBar(BuildContext context,String message) {
                         children: [ 
                           TextSpan( text: 'Log in', 
                           style: GoogleFonts.roboto(
-                          color: Color(0xFF9dff3b),
+                          color:const  Color(0xFF9dff3b),
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
                           letterSpacing: -0.5,

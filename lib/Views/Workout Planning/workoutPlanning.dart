@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/Views/Performance/Model/exerciseModel.dart';
-import 'package:gain_wave_app/Views/Performance/Exercise%20Data/exercisesList.dart';
+import 'package:gain_wave_app/Views/Performance/Services/exercisesList.dart';
+import 'package:gain_wave_app/utillities/colors.dart';
 
 class WorkoutPlannerScreen extends StatefulWidget {
   const WorkoutPlannerScreen({Key? key}) : super(key: key);
@@ -31,152 +32,163 @@ class _WorkoutPlannerScreenState extends State<WorkoutPlannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Your Workout Plan'),
-        backgroundColor: Colors.blue[800],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Customize Your Workout Plan',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            
-            // Questions section
-            _buildQuestionCard(
-              'What is your preferred workout intensity?',
-              DropdownButton<String>(
-                value: _selectedIntensity,
-                isExpanded: true,
-                items: _intensityLevels.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedIntensity = newValue!;
-                    _updateRecommendedPlan();
-                  });
-                },
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: primaryBG,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Customize Your Workout Plan',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: textMain),
               ),
-            ),
-            
-            _buildQuestionCard(
-              'What is your primary fitness goal?',
-              DropdownButton<String>(
-                value: _selectedGoal,
-                isExpanded: true,
-                items: _goals.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedGoal = newValue!;
-                    _updateRecommendedPlan();
-                  });
-                },
-              ),
-            ),
-            
-            _buildQuestionCard(
-              'How many days can you work out per week?',
-              DropdownButton<int>(
-                value: _workoutDaysPerWeek,
-                isExpanded: true,
-                items: _daysPerWeek.map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text('$value days'),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    _workoutDaysPerWeek = newValue!;
-                    _updateRecommendedPlan();
-                  });
-                },
-              ),
-            ),
-            
-            const SizedBox(height: 20),
-            
-            // Recommended plan section
-            if (_recommendedPlan.isNotEmpty)
-              Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.fitness_center, color: Colors.blue[800]),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Recommended Plan',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue[800],
-                            ),
-                          ),
-                        ],
+              const SizedBox(height: 20),
+              
+              // Questions section
+              _buildQuestionCard(
+                'What is your preferred workout intensity?',
+                DropdownButton<String>(
+                  value: _selectedIntensity,
+                  isExpanded: true,
+                  items: _intensityLevels.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value,
+                        style: const TextStyle(color: textMain),
                       ),
-                      const SizedBox(height: 12),
-                      Text(
-                        _recommendedPlan,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(_planDescriptions[_recommendedPlan] ?? ''),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue[800],
-                          minimumSize: const Size.fromHeight(50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: () {
-                          _showWorkoutPlanDetails(context);
-                        },
-                        child: const Text('View Plan Details'),
-                      ),
-                    ],
-                  ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedIntensity = newValue!;
+                      _updateRecommendedPlan();
+                    });
+                  },
                 ),
               ),
               
-            const SizedBox(height: 20),
-            
-            // All available plans
-            const Text(
-              'All Available Plans',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            ..._planDescriptions.entries.map((entry) => 
-              _buildPlanCard(entry.key, entry.value)
-            ).toList(),
-          ],
+              _buildQuestionCard(
+                'What is your primary fitness goal?',
+                DropdownButton<String>(
+                  value: _selectedGoal,
+                  isExpanded: true,
+                  items: _goals.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value,
+                        style: const TextStyle(color: textMain),
+                    ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedGoal = newValue!;
+                      _updateRecommendedPlan();
+                    });
+                  },
+                ),
+              ),
+              
+              _buildQuestionCard(
+                'How many days can you work out per week?',
+                DropdownButton<int>(
+                  value: _workoutDaysPerWeek,
+                  isExpanded: true,
+                  items: _daysPerWeek.map((int value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Text('$value days',
+                        style: const TextStyle(color: textMain),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _workoutDaysPerWeek = newValue!;
+                      _updateRecommendedPlan();
+                    });
+                  },
+                ),
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // Recommended plan section
+              if (_recommendedPlan.isNotEmpty)
+                Card(
+                  color: secondaryBG,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child:  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                       const  Row(
+                          children: [
+                            Icon(Icons.fitness_center, color: accentMain),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Recommended Plan',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: accentMain,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          _recommendedPlan,
+                          style: const TextStyle(
+                            color: textMain,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(_planDescriptions[_recommendedPlan] ?? '',
+                          style: const TextStyle(color: textMain),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: accentMain,
+                            minimumSize: const Size.fromHeight(50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          onPressed: () {
+                            _showWorkoutPlanDetails(context);
+                          },
+                          child: const Text('View Plan Details',
+                            style: TextStyle(color: primaryBG),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+              const SizedBox(height: 20),
+              
+              // All available plans
+              const Text(
+                'All Available Plans',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: textMain),
+              ),
+              const SizedBox(height: 12),
+              ..._planDescriptions.entries.map((entry) => 
+                _buildPlanCard(entry.key, entry.value)
+              ).toList(),
+            ],
+          ),
         ),
       ),
     );
@@ -184,6 +196,7 @@ class _WorkoutPlannerScreenState extends State<WorkoutPlannerScreen> {
 
   Widget _buildQuestionCard(String question, Widget dropdown) {
     return Card(
+      color: secondaryBG,
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -195,7 +208,7 @@ class _WorkoutPlannerScreenState extends State<WorkoutPlannerScreen> {
           children: [
             Text(
               question,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: textMain),
             ),
             const SizedBox(height: 12),
             dropdown,
@@ -209,11 +222,12 @@ class _WorkoutPlannerScreenState extends State<WorkoutPlannerScreen> {
     final bool isRecommended = planName == _recommendedPlan;
     
     return Card(
+      color: accentMain,
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: isRecommended 
-            ? BorderSide(color: Colors.blue[800]!, width: 2) 
+            ? const BorderSide(color: textMain, width: 3) 
             : BorderSide.none,
       ),
       child: InkWell(
@@ -248,13 +262,13 @@ class _WorkoutPlannerScreenState extends State<WorkoutPlannerScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.blue[800],
+                    color: primaryBG,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: const Text(
                     'Recommended',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: textMain,
                       fontSize: 12,
                     ),
                   ),
@@ -482,80 +496,83 @@ class WorkoutPlanDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(planName),
-        backgroundColor: Colors.blue[800],
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {
-              // Save workout plan to user's profile
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Workout plan saved!')),
-              );
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          Card(
-            margin: const EdgeInsets.only(bottom: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: primaryBG,
+        appBar: AppBar(
+          title: Text(planName),
+          backgroundColor:accentMain,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                // Save workout plan to user's profile
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Workout plan saved!')),
+                );
+                Navigator.pop(context);
+              },
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    planName,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${workoutPlan.length} days per week',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'This plan is designed to hit all muscle groups throughout the week with optimal recovery time.',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          ...workoutPlan.map((day) => _buildWorkoutDayCard(day)).toList(),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue[800],
-              minimumSize: const Size.fromHeight(50),
+          ],
+        ),
+        body: ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            Card(
+              margin: const EdgeInsets.only(bottom: 16),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      planName,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${workoutPlan.length} days per week',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'This plan is designed to hit all muscle groups throughout the week with optimal recovery time.',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
             ),
-            onPressed: () {
-              // Save and start the workout
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Workout plan activated!')),
-              );
-              Navigator.pop(context);
-            },
-            child: const Text('Start This Plan'),
-          ),
-        ],
+            ...workoutPlan.map((day) => _buildWorkoutDayCard(day)).toList(),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: accentMain,
+                minimumSize: const Size.fromHeight(50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onPressed: () {
+                // Save and start the workout
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Workout plan activated!')),
+                );
+                Navigator.pop(context);
+              },
+              child: const Text('Start This Plan'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -595,10 +612,10 @@ class WorkoutPlanDetailsScreen extends StatelessWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: primaryBG,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(Icons.fitness_center, color: Colors.blue[800]),
+            child: Icon(Icons.fitness_center, color: accentMain),
           ),
           const SizedBox(width: 16),
           Expanded(

@@ -13,10 +13,10 @@ class auth_view extends StatelessWidget {
         builder: (context, snapshot) {
           if(snapshot.hasData){
 
-          return const page_control_nav();
+          return const PageNavController();
           }
           else{
-            return const register_view();
+            return const RegisterView();
           //  Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (_) => false);
           }
         },

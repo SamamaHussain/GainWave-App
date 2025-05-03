@@ -2,24 +2,25 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/Views/ChatApp/ChatAppView.dart';
 import 'package:gain_wave_app/Views/Home/HomePageView.dart';
-import 'package:gain_wave_app/Views/Performance/UI/exerciseLibrary.dart';
+import 'package:gain_wave_app/Views/Performance/UI/exerciseLibraryPage.dart';
 import 'package:gain_wave_app/Views/User%20Profle/profilePage.dart';
 import 'package:gain_wave_app/main.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-class page_control_nav extends StatefulWidget {
-  const page_control_nav({super.key});
+class PageNavController extends StatefulWidget {
+  const PageNavController({super.key});
   @override
-  State<page_control_nav> createState() => _page_control_navState();
+  State<PageNavController> createState() => _PageNavControllerState();
 }
 
-class _page_control_navState extends State<page_control_nav> {
+class _PageNavControllerState extends State<PageNavController> {
   var index = 0;
 
-  final total_screens = const [
+  final totalScreens = const [
     home_page_view(),
-    ExerciseLibraryPage(),
+    // ExerciseLibraryPage(),
+    ExerciseLibraryPage2(),
     GymChatBot(),
     ProfilePage(),
   ];
@@ -48,16 +49,16 @@ class _page_control_navState extends State<page_control_nav> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryBG,
-      body: total_screens[index],
+      body: totalScreens[index],
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 0),
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Container(
-                constraints: BoxConstraints.tightFor(height: 80),
-                decoration: BoxDecoration(
+                constraints:const BoxConstraints.tightFor(height: 80),
+                decoration: const BoxDecoration(
                   color: secondaryBG,
                 ),
               ),
@@ -65,7 +66,7 @@ class _page_control_navState extends State<page_control_nav> {
             Positioned.fill(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     physics: const BouncingScrollPhysics(),
@@ -82,7 +83,7 @@ class _page_control_navState extends State<page_control_nav> {
                       color: textMain,
                       activeColor: accentMain,
                       gap: 8,
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
                       duration: const Duration(milliseconds: 350),
                       tabs: [
                         GButton(icon: Icons.home, text: 'Home',),

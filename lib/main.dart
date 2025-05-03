@@ -5,7 +5,7 @@ import 'package:gain_wave_app/Views/Auth/EmailVerificationView.dart';
 import 'package:gain_wave_app/Views/Auth/LoginView.dart';
 import 'package:gain_wave_app/Views/Auth/RegisterView.dart';
 import 'package:gain_wave_app/PageControlNav.dart';
-import 'package:gain_wave_app/Views/Muscle%20Volume/muscleVolume.dart';
+import 'package:gain_wave_app/Views/Mesocycle/mesocycle.dart';
 import 'package:gain_wave_app/Views/Workout%20Planning/workoutPlanning.dart';
 import 'package:gain_wave_app/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -43,10 +43,12 @@ class MyApp extends StatelessWidget {
       home: const auth_view(),
       
       routes: {
-          '/loginRoute': (context) => const login_view(),
-          '/registerRoute': (context) => const register_view(),
-          '/homeRoute': (context) => const page_control_nav(),
+          '/loginRoute': (context) => const LoginView(),
+          '/registerRoute': (context) => const RegisterView(),
+          '/homeRoute': (context) => const PageNavController(),
           '/emailVerifyRoute': (context) => const email_verify(),
+          '/workoutPlanningRoute': (context) => const WorkoutPlannerScreen(),
+          '/mesocycleRoute': (context) => const MesocycleTracker(),
         },
     ),
     

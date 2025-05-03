@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GymChatBot extends StatefulWidget {
   const GymChatBot({super.key});
@@ -15,6 +17,28 @@ class _GymChatBotState extends State<GymChatBot> {
   final List<Map<String, String>> messages = [];
   final TextEditingController _textController = TextEditingController();
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMessages();
+  }
+
+  Future<void> _loadMessages() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? savedMessages = prefs.getString('chat_messages');
+    if (savedMessages != null) {
+      final List decoded = jsonDecode(savedMessages);
+      setState(() {
+        messages.addAll(decoded.map<Map<String, String>>((e) => Map<String, String>.from(e)));
+      });
+    }
+  }
+
+  Future<void> _saveMessages() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('chat_messages', jsonEncode(messages));
+  }
 
   void getGymAdvice() async {
     final userInput = _textController.text.trim();
@@ -30,6 +54,7 @@ class _GymChatBotState extends State<GymChatBot> {
       messages.add({"sender": "user", "message": userInput});
       _textController.clear();
     });
+    _saveMessages(); // Save after user sends
 
     try {
       final content = [
@@ -39,7 +64,7 @@ class _GymChatBotState extends State<GymChatBot> {
       ];
       final model = GenerativeModel(
         model: 'gemini-1.5-flash',
-        apiKey: dotenv.env['API_KEY']?? "Not found", // Replace with secure storage for your API key
+        apiKey: dotenv.env['API_KEY'] ?? "Not found",
       );
       final response = await model.generateContent(content);
 
@@ -49,6 +74,7 @@ class _GymChatBotState extends State<GymChatBot> {
           "message": response.text ?? "I couldn't find an answer. Please try again.",
         });
       });
+      _saveMessages(); // Save after bot responds
     } catch (e) {
       setState(() {
         messages.add({
@@ -56,6 +82,7 @@ class _GymChatBotState extends State<GymChatBot> {
           "message": "Error: ${e.toString()}",
         });
       });
+      _saveMessages();
     } finally {
       setState(() {
         isLoading = false;
@@ -71,6 +98,13 @@ class _GymChatBotState extends State<GymChatBot> {
         margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 4.0,
+              offset: const Offset(0, 4),
+            ),
+          ],
           color: isUser ? accentMain : secondaryBG,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16.0),
@@ -102,46 +136,52 @@ class _GymChatBotState extends State<GymChatBot> {
             padding: const EdgeInsets.only(left: 10),
             child: CircleAvatar(
               backgroundColor: primaryBG,
-                child: Icon(
-                  Icons.personal_injury_rounded, // Replace with the icon of your choice
-                  size: 35.0, // You can adjust the size of the icon
-                  color: textMain, // You can adjust the color of the icon
-                ),
+              child: Icon(
+                Icons.personal_injury_rounded,
+                size: 35.0,
+                color: textMain,
               ),
+            ),
           ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("GainWave Mentor",
-              style: GoogleFonts.roboto(
-                fontSize: 22,
-                color: textMain,
+              Text(
+                "GainWave Mentor",
+                style: GoogleFonts.roboto(
+                  fontSize: 22,
+                  color: textMain,
+                ),
               ),
-              ),
-              SizedBox(height: 2,),
+              const SizedBox(height: 2),
               if (isLoading)
-                Text("typing...",
-              style: GoogleFonts.roboto(
-                fontSize: 12,
-                fontStyle: FontStyle.italic,
-                color: accentMain,
-              ),),
-              if(isLoading==false)
-              Text("Online",
-              style: GoogleFonts.roboto(
-                fontSize: 13,
-                color: Colors.grey,
-              ),),
+                Text(
+                  "typing...",
+                  style: GoogleFonts.roboto(
+                    fontSize: 12,
+                    fontStyle: FontStyle.italic,
+                    color: accentMain,
+                  ),
+                ),
+              if (!isLoading)
+                Text(
+                  "Online",
+                  style: GoogleFonts.roboto(
+                    fontSize: 13,
+                    color: Colors.grey,
+                  ),
+                ),
             ],
           ),
-          actions: <Widget>[
-            IconButton(onPressed: () {
-              
-            }, icon: Icon(Icons.more_vert_rounded))
-          ]
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.more_vert_rounded),
+            ),
+          ],
         ),
         body: Padding(
-          padding: EdgeInsets.fromLTRB(5, 30, 5, 0),
+          padding: const EdgeInsets.fromLTRB(5, 30, 5, 0),
           child: Column(
             children: [
               Expanded(
@@ -165,13 +205,21 @@ class _GymChatBotState extends State<GymChatBot> {
                         decoration: InputDecoration(
                           fillColor: secondaryBG,
                           filled: true,
-                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: textMain),borderRadius: BorderRadius.circular(50),),
-                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: textMain),borderRadius: BorderRadius.circular(50),),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: textMain),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          disabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: textMain),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
                           hintStyle: GoogleFonts.roboto(color: Colors.grey),
                           hintText: "Ask your fitness question",
-                          border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white),borderRadius: BorderRadius.circular(50),
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(50),
                           ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
                         ),
                       ),
                     ),
@@ -179,7 +227,7 @@ class _GymChatBotState extends State<GymChatBot> {
                     FloatingActionButton(
                       onPressed: getGymAdvice,
                       backgroundColor: accentMain,
-                      child: const Icon(Icons.send,color: primaryBG,),
+                      child: const Icon(Icons.send, color: primaryBG),
                     ),
                   ],
                 ),
