@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gain_wave_app/utillities/FirebaseServices/FirebaseServices.dart';
+import 'package:gain_wave_app/utillities/Providers/Auth%20Providers/FirebaseServices.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';

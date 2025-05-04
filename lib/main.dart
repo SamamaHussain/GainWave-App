@@ -5,17 +5,22 @@ import 'package:gain_wave_app/Views/Auth/EmailVerificationView.dart';
 import 'package:gain_wave_app/Views/Auth/LoginView.dart';
 import 'package:gain_wave_app/Views/Auth/RegisterView.dart';
 import 'package:gain_wave_app/PageControlNav.dart';
+import 'package:gain_wave_app/Views/Daiy%20Workout/dailyWorkoutScree.dart';
 import 'package:gain_wave_app/Views/Mesocycle/mesocycle.dart';
+import 'package:gain_wave_app/Views/Recommendation/exerciseRecommender.dart';
+import 'package:gain_wave_app/Views/Recommendation/recomHomeScreen.dart';
 import 'package:gain_wave_app/Views/Workout%20Planning/workoutPlanning.dart';
 import 'package:gain_wave_app/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:gain_wave_app/utillities/FirebaseServices/FirebaseServices.dart';
-import 'package:gain_wave_app/utillities/FirebaseServices/FirestoreFuncs.dart';
+import 'package:gain_wave_app/utillities/Providers/Auth%20Providers/FirebaseServices.dart';
+import 'package:gain_wave_app/utillities/Providers/Auth%20Providers/FirestoreFuncs.dart';
+import 'package:gain_wave_app/utillities/Providers/dailyWorkoutProvider.dart';
 import 'package:provider/provider.dart';
 
     FirebaseServices firebaseServices= FirebaseServices();
     FirestoreFuncs firestoreFuncs= FirestoreFuncs();
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   dotenv.load();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -32,6 +37,8 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<FirebaseServices>(
         create: (context) => firebaseServices,
       ),
+        ChangeNotifierProvider(create: (_) => DailyWorkoutProvider()),
+      
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -49,6 +56,9 @@ class MyApp extends StatelessWidget {
           '/emailVerifyRoute': (context) => const email_verify(),
           '/workoutPlanningRoute': (context) => const WorkoutPlannerScreen(),
           '/mesocycleRoute': (context) => const MesocycleTracker(),
+          '/recommendarRoute': (context) => const ExerciseRecommendation(),
+          '/recomHomeRoute': (context) => const RecomHomeScreen(),
+          '/dailyWorkoutRoute': (context) => const DailyWorkoutScreen(),
         },
     ),
     

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gain_wave_app/utillities/FirebaseServices/FirebaseServices.dart';
+import 'package:gain_wave_app/Views/Daiy%20Workout/dailyWorkoutScree.dart';
+import 'package:gain_wave_app/utillities/Providers/Auth%20Providers/FirebaseServices.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:gain_wave_app/utillities/widgets/AnimatedCard.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -123,7 +124,7 @@ class _home_page_viewState extends State<home_page_view> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     InkWell(
@@ -189,9 +190,83 @@ class _home_page_viewState extends State<home_page_view> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/recommendarRoute');
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        elevation: 6,
+                        color: secondaryBG,
+                        child: Padding(
+                          padding: const EdgeInsets.all(
+                              20), // Padding inside the Card
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromARGB(255, 41, 61, 23),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                        Icons.fitness_center_rounded,
+                                        size: 35,
+                                        color: accentMain),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'AI-Powered Fitness Coaching',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Transform Your Body with AI-Driven Fitness Plans.',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/dailyWorkoutRoute');
+          },
+          shape: CircleBorder(),
+          backgroundColor: accentMain,
+          child: const Icon(Icons.track_changes, size: 30, color: secondaryBG),
+        ),
       ),
     );
   }
