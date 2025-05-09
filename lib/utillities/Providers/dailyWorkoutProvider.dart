@@ -1,104 +1,190 @@
-import 'package:flutter/material.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+
+// class DailyWorkoutService {
+//   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+//   final FirebaseAuth _auth = FirebaseAuth.instance;
+  
+//   // Get current user ID
+//   String? get currentUserId => _auth.currentUser?.uid;
+
+//   // Save workout data to Firebase
+//   Future<void> saveWorkoutData(Map<String, dynamic> workoutData) async {
+//     if (currentUserId == null) {
+//       throw Exception('No user signed in');
+//     }
+    
+//     try {
+//       // Reference to the specific document in the nested collection
+//       final docRef = _firestore
+//           .collection('user')
+//           .doc(currentUserId)
+//           .collection('Daily_Workout_Data')
+//           .doc(workoutData['date']);
+      
+//       // Save each field directly
+//       await docRef.set({
+//         'date': workoutData['date'],
+//         'exerciseName': workoutData['exerciseName'],
+//         'muscleGroup': workoutData['muscleGroup'],
+//         'sets': workoutData['sets'],
+//         'reps': workoutData['reps'],
+//         'weight': workoutData['weight'],
+//         'restTime': workoutData['restTime'],
+//         'workoutDuration': workoutData['workoutDuration'],
+//         'timestamp': Timestamp.now(),
+//       });
+//     } catch (e) {
+//       throw e;
+//     }
+//   }
+
+//   // Get all workout data for the current user
+//   Future<List<Map<String, dynamic>>> getAllWorkouts() async {
+//     if (currentUserId == null) {
+//       throw Exception('No user signed in');
+//     }
+    
+//     try {
+//       final querySnapshot = await _firestore
+//           .collection('user')
+//           .doc(currentUserId)
+//           .collection('Daily_Workout_Data')
+//           .orderBy('date', descending: true)
+//           .get();
+      
+//       return querySnapshot.docs
+//           .map((doc) => {
+//                 'id': doc.id,
+//                 ...doc.data(),
+//               })
+//           .toList();
+//     } catch (e) {
+//       throw e;
+//     }
+//   }
+
+//   // Get workout for a specific date
+//   Future<Map<String, dynamic>?> getWorkoutByDate(String date) async {
+//     if (currentUserId == null) {
+//       throw Exception('No user signed in');
+//     }
+    
+//     try {
+//       final docSnapshot = await _firestore
+//           .collection('user')
+//           .doc(currentUserId)
+//           .collection('Daily_Workout_Data')
+//           .doc(date)
+//           .get();
+      
+//       if (docSnapshot.exists) {
+//         return {
+//           'id': docSnapshot.id,
+//           ...docSnapshot.data()!,
+//         };
+//       } else {
+//         return null;
+//       }
+//     } catch (e) {
+//       throw e;
+//     }
+//   }
+
+//   // Delete a workout entry
+//   Future<void> deleteWorkout(String date) async {
+//     if (currentUserId == null) {
+//       throw Exception('No user signed in');
+//     }
+    
+//     try {
+//       await _firestore
+//           .collection('user')
+//           .doc(currentUserId)
+//           .collection('Daily_Workout_Data')
+//           .doc(date)
+//           .delete();
+//     } catch (e) {
+//       throw e;
+//     }
+//   }
+// }
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
-class DailyWorkoutProvider extends ChangeNotifier {
+class DailyWorkoutService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-  
-  String? _error;
-  String? get error => _error;
 
   // Get current user ID
   String? get currentUserId => _auth.currentUser?.uid;
 
   // Save workout data to Firebase
-  Future<void> saveWorkoutData(Map<String, dynamic> workoutData) async {
+  Future<void> saveWorkoutData(DateTime date, Map<String, dynamic> workoutData) async {
+    // Ensure user is logged in
     if (currentUserId == null) {
-      throw Exception('No user signed in');
+      throw Exception('User not authenticated');
     }
-    
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-    
+
     try {
-      // Reference to the specific document in the nested collection
-      final docRef = _firestore
+      // Format date as string for document ID - format as YYYY-MM-DD
+      final String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+      
+      // Reference to user's workout collection
+      final userWorkoutRef = _firestore
+          .collection('user')
+          .doc(currentUserId)
+          .collection('Daily_Workout_Data');
+      
+      // Add workout data with date as document ID
+      await userWorkoutRef.doc(formattedDate).set(workoutData);
+    } catch (e) {
+      // Re-throw the exception to be handled by the UI
+      throw Exception('Failed to save workout data: ${e.toString()}');
+    }
+  }
+
+  // Get workout data for a specific date
+  Future<Map<String, dynamic>?> getWorkoutData(DateTime date) async {
+    if (currentUserId == null) {
+      throw Exception('User not authenticated');
+    }
+
+    try {
+      final String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+      
+      final docSnapshot = await _firestore
           .collection('user')
           .doc(currentUserId)
           .collection('Daily_Workout_Data')
-          .doc(workoutData['date']);
-      
-      // Check if document already exists
-      final docSnapshot = await docRef.get();
+          .doc(formattedDate)
+          .get();
       
       if (docSnapshot.exists) {
-        // If document exists with the same date, update it with the new workout
-        // In a real app, you might want to add this to an array of workouts for the day
-        // or handle it differently based on your requirements
-        await docRef.update({
-          'exercises': FieldValue.arrayUnion([{
-            'exerciseName': workoutData['exerciseName'],
-            'muscleGroup': workoutData['muscleGroup'],
-            'sets': workoutData['sets'],
-            'reps': workoutData['reps'],
-            'weight': workoutData['weight'],
-            'restTime': workoutData['restTime'],
-            'workoutDuration': workoutData['workoutDuration'],
-            'timestamp': FieldValue.serverTimestamp(),
-          }])
-        });
+        return docSnapshot.data();
       } else {
-        // If document doesn't exist, create a new one
-        await docRef.set({
-          'date': workoutData['date'],
-          'exercises': [{
-            'exerciseName': workoutData['exerciseName'],
-            'muscleGroup': workoutData['muscleGroup'],
-            'sets': workoutData['sets'],
-            'reps': workoutData['reps'],
-            'weight': workoutData['weight'],
-            'restTime': workoutData['restTime'],
-            'workoutDuration': workoutData['workoutDuration'],
-            'timestamp': FieldValue.serverTimestamp(),
-          }]
-        });
+        return null;
       }
-      
-      _isLoading = false;
-      notifyListeners();
     } catch (e) {
-      _isLoading = false;
-      _error = e.toString();
-      notifyListeners();
-      throw e;
+      throw Exception('Failed to fetch workout data: ${e.toString()}');
     }
   }
 
   // Get all workout data for the current user
-  Future<List<Map<String, dynamic>>> getAllWorkouts() async {
+  Future<List<Map<String, dynamic>>> getAllWorkoutData() async {
     if (currentUserId == null) {
-      throw Exception('No user signed in');
+      throw Exception('User not authenticated');
     }
-    
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-    
+
     try {
       final querySnapshot = await _firestore
-          .collection('users')
+          .collection('user')
           .doc(currentUserId)
           .collection('Daily_Workout_Data')
-          .orderBy('date', descending: true)
+          .orderBy('createdAt', descending: true)
           .get();
-      
-      _isLoading = false;
-      notifyListeners();
       
       return querySnapshot.docs
           .map((doc) => {
@@ -107,125 +193,27 @@ class DailyWorkoutProvider extends ChangeNotifier {
               })
           .toList();
     } catch (e) {
-      _isLoading = false;
-      _error = e.toString();
-      notifyListeners();
-      throw e;
+      throw Exception('Failed to fetch all workout data: ${e.toString()}');
     }
   }
 
-  // Get workouts for a specific date
-  Future<Map<String, dynamic>?> getWorkoutByDate(String date) async {
+  // Delete workout data for a specific date
+  Future<void> deleteWorkoutData(String dateId) async {
     if (currentUserId == null) {
-      throw Exception('No user signed in');
+      throw Exception('User not authenticated');
     }
-    
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-    
 
-    try {
-      final docSnapshot = await _firestore
-          .collection('users')
-          .doc(currentUserId)
-          .collection('Daily_Workout_Data')
-          .doc(date)
-          .get();
-      
-      _isLoading = false;
-      notifyListeners();
-      
-      if (docSnapshot.exists) {
-        return {
-          'id': docSnapshot.id,
-          ...docSnapshot.data()!,
-        };
-      } else {
-        return null;
-      }
-    } catch (e) {
-      _isLoading = false;
-      _error = e.toString();
-      notifyListeners();
-      throw e;
-    }
-  }
-
-  // Delete a workout entry
-  Future<void> deleteWorkout(String date) async {
-    if (currentUserId == null) {
-      throw Exception('No user signed in');
-    }
-    
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-    
     try {
       await _firestore
-          .collection('users')
+          .collection('user')
           .doc(currentUserId)
           .collection('Daily_Workout_Data')
-          .doc(date)
+          .doc(dateId)
           .delete();
-      
-      _isLoading = false;
-      notifyListeners();
     } catch (e) {
-      _isLoading = false;
-      _error = e.toString();
-      notifyListeners();
-      throw e;
+      throw Exception('Failed to delete workout data: ${e.toString()}');
     }
   }
 
-  // Delete a specific exercise from a workout day
-  Future<void> deleteExercise(String date, int exerciseIndex) async {
-    if (currentUserId == null) {
-      throw Exception('No user signed in');
-    }
-    
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-    
-    try {
-      // First, get the current document
-      final docRef = _firestore
-          .collection('users')
-          .doc(currentUserId)
-          .collection('Daily_Workout_Data')
-          .doc(date);
-          
-      final docSnapshot = await docRef.get();
-      
-      if (docSnapshot.exists) {
-        Map<String, dynamic> data = docSnapshot.data()!;
-        List<dynamic> exercises = List.from(data['exercises'] ?? []);
-        
-        if (exerciseIndex >= 0 && exerciseIndex < exercises.length) {
-          exercises.removeAt(exerciseIndex);
-          
-          // If no exercises left, delete the whole document
-          if (exercises.isEmpty) {
-            await docRef.delete();
-          } else {
-            // Otherwise update with the modified list
-            await docRef.update({
-              'exercises': exercises,
-            });
-          }
-        }
-      }
-      
-      _isLoading = false;
-      notifyListeners();
-    } catch (e) {
-      _isLoading = false;
-      _error = e.toString();
-      notifyListeners();
-      throw e;
-    }
-  }
+
 }

@@ -1,20 +1,23 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gain_wave_app/Views/Analysis%20and%20Reporting/analysisScreen.dart';
 import 'package:gain_wave_app/Views/Auth/AuthView.dart';
 import 'package:gain_wave_app/Views/Auth/EmailVerificationView.dart';
 import 'package:gain_wave_app/Views/Auth/LoginView.dart';
 import 'package:gain_wave_app/Views/Auth/RegisterView.dart';
 import 'package:gain_wave_app/PageControlNav.dart';
-import 'package:gain_wave_app/Views/Daiy%20Workout/dailyWorkoutScree.dart';
+import 'package:gain_wave_app/Views/Daiy%20Workout/dailyWorkoutScreen.dart';
+import 'package:gain_wave_app/Views/Daiy%20Workout/workoutHistoryScreem.dart';
+import 'package:gain_wave_app/Views/Feedback%20and%20Adjustment/feedbackScreen.dart';
 import 'package:gain_wave_app/Views/Mesocycle/mesocycle.dart';
 import 'package:gain_wave_app/Views/Recommendation/exerciseRecommender.dart';
 import 'package:gain_wave_app/Views/Recommendation/recomHomeScreen.dart';
-import 'package:gain_wave_app/Views/Workout%20Planning/workoutPlanning.dart';
+import 'package:gain_wave_app/Views/Recovery/recoveryFormpage.dart';
+import 'package:gain_wave_app/Views/Workout%20Planning/plannerScreen.dart';
 import 'package:gain_wave_app/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gain_wave_app/utillities/Providers/Auth%20Providers/FirebaseServices.dart';
 import 'package:gain_wave_app/utillities/Providers/Auth%20Providers/FirestoreFuncs.dart';
-import 'package:gain_wave_app/utillities/Providers/dailyWorkoutProvider.dart';
 import 'package:provider/provider.dart';
 
     FirebaseServices firebaseServices= FirebaseServices();
@@ -25,6 +28,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp() );
 }
 
@@ -37,7 +41,7 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<FirebaseServices>(
         create: (context) => firebaseServices,
       ),
-        ChangeNotifierProvider(create: (_) => DailyWorkoutProvider()),
+        // ChangeNotifierProvider<DailyWorkoutProvider>(create: (context) => DailyWorkoutProvider()),
       
     ],
     child: MaterialApp(
@@ -47,7 +51,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 255, 255)),
         useMaterial3: false,
       ),
-      home: const auth_view(),
+      home:   auth_view(),
       
       routes: {
           '/loginRoute': (context) => const LoginView(),
@@ -59,6 +63,8 @@ class MyApp extends StatelessWidget {
           '/recommendarRoute': (context) => const ExerciseRecommendation(),
           '/recomHomeRoute': (context) => const RecomHomeScreen(),
           '/dailyWorkoutRoute': (context) => const DailyWorkoutScreen(),
+          '/WorkoutHistoryRoute': (context) => const WorkoutHistoryScreen(),
+          '/analysisRoute': (context) => const PerformanceAnalysisScreen(),
         },
     ),
     

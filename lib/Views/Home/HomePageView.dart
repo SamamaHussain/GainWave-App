@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gain_wave_app/Views/Daiy%20Workout/dailyWorkoutScree.dart';
 import 'package:gain_wave_app/utillities/Providers/Auth%20Providers/FirebaseServices.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:gain_wave_app/utillities/widgets/AnimatedCard.dart';
@@ -130,7 +129,7 @@ class _home_page_viewState extends State<home_page_view> {
                     InkWell(
                       borderRadius: BorderRadius.circular(20),
                       onTap: () {
-                        Navigator.pushNamed(context, '/mesocycleRoute');
+                        Navigator.pushNamed(context, '/analysisRoute');
                       },
                       child: Card(
                         shape: RoundedRectangleBorder(
