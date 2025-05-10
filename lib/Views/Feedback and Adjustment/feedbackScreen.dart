@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/Views/Performance/Model/exerciseModel.dart';
 import 'package:gain_wave_app/Views/Performance/Services/exercisesList.dart';
+import 'package:gain_wave_app/utillities/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WorkoutFeedbackScreen extends StatefulWidget {
   const WorkoutFeedbackScreen({Key? key}) : super(key: key);
@@ -75,7 +77,7 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
     }
 
     // Parse workout details
-    final int reps = int.tryParse(_repsController.text) ?? 0;
+    // final int reps = int.tryParse(_repsController.text) ?? 0;
     final int sets = int.tryParse(_setsController.text) ?? 0;
     final double weight = double.tryParse(_weightController.text) ?? 0;
 
@@ -138,40 +140,86 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
 
   Widget _buildExerciseSelector() {
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.all(8),
+      elevation: 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      color: secondaryBG,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Select Exercise',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 41, 61, 23),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.fitness_center,
+                    size: 35,
+                    color: accentMain,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  'Select Exercise',
+                  style: GoogleFonts.roboto(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            const Divider(
+              color: Colors.white24,
+              height: 40,
+            ),
+            Text(
+              'Choose your exercise',
+              style: GoogleFonts.roboto(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             const SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
+                color: Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: Colors.white24),
               ),
-              child: DropdownButton<Exercise>(
-                isExpanded: true,
-                underline: Container(),
-                value: selectedExercise,
-                hint: const Text('Select an exercise'),
-                items: exerciseList.map((Exercise exercise) {
-                  return DropdownMenuItem<Exercise>(
-                    value: exercise,
-                    child: Text(exercise.name),
-                  );
-                }).toList(),
-                onChanged: (Exercise? value) {
-                  if (value != null) {
-                    _selectExercise(value);
-                  }
-                },
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<Exercise>(
+                  isExpanded: true,
+                  value: selectedExercise,
+                  hint: Text(
+                    'Select an exercise',
+                    style: GoogleFonts.roboto(color: Colors.white70),
+                  ),
+                  dropdownColor: secondaryBG,
+                  icon: const Icon(Icons.arrow_drop_down, color: accentMain),
+                  items: exerciseList.map((Exercise exercise) {
+                    return DropdownMenuItem<Exercise>(
+                      value: exercise,
+                      child: Text(
+                        exercise.name,
+                        style: GoogleFonts.roboto(color: Colors.white),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (Exercise? value) {
+                    if (value != null) {
+                      _selectExercise(value);
+                    }
+                  },
+                ),
               ),
             ),
           ],
@@ -186,66 +234,126 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
     }
 
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.all(8),
+      elevation: 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      color: secondaryBG,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '${selectedExercise!.name} Details',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(
-                  child: TextField(
-                    controller: _repsController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Reps',
-                      border: OutlineInputBorder(),
-                    ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 41, 61, 23),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.edit_note_rounded,
+                    size: 35,
+                    color: accentMain,
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    controller: _setsController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Sets',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    controller: _weightController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Weight (kg)',
-                      border: OutlineInputBorder(),
-                    ),
+                const SizedBox(width: 20),
+                Text(
+                  '${selectedExercise!.name} Details',
+                  style: GoogleFonts.roboto(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const Divider(
+              color: Colors.white24,
+              height: 40,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildTextField(
+                    controller: _repsController,
+                    label: 'Reps',
+                    icon: Icons.repeat,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildTextField(
+                    controller: _setsController,
+                    label: 'Sets',
+                    icon: Icons.format_list_numbered,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildTextField(
+                    controller: _weightController,
+                    label: 'Weight | kg',
+                    icon: Icons.monitor_weight_outlined,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
             Center(
               child: ElevatedButton(
                 onPressed: _submitWorkoutDetails,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  backgroundColor: accentMain,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 22),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  elevation: 5,
                 ),
-                child: const Text('Submit Workout'),
+                child: Text(
+                  'Submit Workout',
+                  style: GoogleFonts.roboto(
+                    color: primaryBG,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: TextInputType.number,
+      style: GoogleFonts.roboto(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: GoogleFonts.roboto(color: Colors.white70),
+        prefixIcon: Icon(icon, color: accentMain, size: 22),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: accentMain),
+        ),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.1),
+        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
     );
   }
@@ -256,27 +364,58 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
     }
 
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.all(8),
+      elevation: 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      color: secondaryBG,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Workout Feedback',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 41, 61, 23),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.rate_review_outlined,
+                    size: 35,
+                    color: accentMain,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  'Workout Feedback',
+                  style: GoogleFonts.roboto(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
+            const Divider(
+              color: Colors.white24,
+              height: 40,
+            ),
             ...feedbackAnswers.keys.map((question) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     question,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   if (question == 'How difficult was the workout?')
                     _buildRadioGroup(
                       question,
@@ -297,7 +436,7 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
                       question,
                       ['Less than 30 seconds', '30-90 seconds', '1-3 minutes', 'More than 3 minutes'],
                     ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                 ],
               );
             }).toList(),
@@ -305,9 +444,23 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
               child: ElevatedButton(
                 onPressed: _generateFeedback,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  backgroundColor: accentMain,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  elevation: 5,
                 ),
-                child: const Text('Get Feedback'),
+                child: Text(
+                  'Get Feedback',
+                  style: GoogleFonts.roboto(
+                    color: primaryBG,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ),
             ),
           ],
@@ -317,21 +470,38 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
   }
 
   Widget _buildRadioGroup(String question, List<String> options) {
-    return Column(
-      children: options.map((option) {
-        return RadioListTile<String>(
-          title: Text(option),
-          value: option,
-          groupValue: feedbackAnswers[question],
-          onChanged: (value) {
-            setState(() {
-              feedbackAnswers[question] = value;
-            });
-          },
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-        );
-      }).toList(),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: Column(
+        children: options.map((option) {
+          return RadioListTile<String>(
+            title: Text(
+              option,
+              style: GoogleFonts.roboto(
+                color: Colors.white,
+                fontSize: 15,
+              ),
+            ),
+            value: option,
+            groupValue: feedbackAnswers[question],
+            onChanged: (value) {
+              setState(() {
+                feedbackAnswers[question] = value;
+              });
+            },
+            activeColor: accentMain,
+            dense: true,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -341,23 +511,62 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
     }
 
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.all(8),
+      elevation: 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      color: secondaryBG,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Your Personalized Feedback',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 41, 61, 23),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.tips_and_updates_outlined,
+                    size: 35,
+                    color: accentMain,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  'Your Personalized Feedback',
+                  style: GoogleFonts.roboto(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            Text(
-              feedback,
-              style: const TextStyle(fontSize: 16),
+            const Divider(
+              color: Colors.white24,
+              height: 40,
             ),
-            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: Colors.white.withOpacity(0.1)),
+              ),
+              child: Text(
+                feedback,
+                style: GoogleFonts.roboto(
+                  fontSize: 16,
+                  color: Colors.white,
+                  height: 1.5,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
             Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -383,9 +592,23 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  backgroundColor: accentMain,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 22),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  elevation: 5,
                 ),
-                child: const Text('Done'),
+                child: Text(
+                  'Done',
+                  style: GoogleFonts.roboto(
+                    color: primaryBG,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ),
             ),
           ],
@@ -396,25 +619,37 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Workout Feedback'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildExerciseSelector(),
-              const SizedBox(height: 8),
-              _buildWorkoutDetailsForm(),
-              const SizedBox(height: 8),
-              _buildFeedbackForm(),
-              const SizedBox(height: 8),
-              _buildFeedbackResult(),
-            ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: primaryBG,
+        appBar: AppBar(
+          backgroundColor: primaryBG,
+          elevation: 0,
+          title: Text(
+            'Workout Feedback',
+            style: GoogleFonts.roboto(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildExerciseSelector(),
+                const SizedBox(height: 16),
+                _buildWorkoutDetailsForm(),
+                const SizedBox(height: 16),
+                _buildFeedbackForm(),
+                const SizedBox(height: 16),
+                _buildFeedbackResult(),
+              ],
+            ),
           ),
         ),
       ),

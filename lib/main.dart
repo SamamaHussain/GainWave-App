@@ -1,17 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gain_wave_app/Views/Analysis%20and%20Reporting/analysisScreen.dart';
+import 'package:gain_wave_app/Views/Analysis%20and%20Reporting/workoutAnylsisScreen.dart';
 import 'package:gain_wave_app/Views/Auth/AuthView.dart';
 import 'package:gain_wave_app/Views/Auth/EmailVerificationView.dart';
 import 'package:gain_wave_app/Views/Auth/LoginView.dart';
 import 'package:gain_wave_app/Views/Auth/RegisterView.dart';
 import 'package:gain_wave_app/PageControlNav.dart';
 import 'package:gain_wave_app/Views/Daiy%20Workout/dailyWorkoutScreen.dart';
-import 'package:gain_wave_app/Views/Daiy%20Workout/workoutHistoryScreem.dart';
+import 'package:gain_wave_app/Views/Daiy%20Workout/workoutDetailScreen.dart';
 import 'package:gain_wave_app/Views/Feedback%20and%20Adjustment/feedbackScreen.dart';
 import 'package:gain_wave_app/Views/Mesocycle/mesocycle.dart';
 import 'package:gain_wave_app/Views/Recommendation/exerciseRecommender.dart';
-import 'package:gain_wave_app/Views/Recommendation/recomHomeScreen.dart';
 import 'package:gain_wave_app/Views/Recovery/recoveryFormpage.dart';
 import 'package:gain_wave_app/Views/Workout%20Planning/plannerScreen.dart';
 import 'package:gain_wave_app/firebase_options.dart';
@@ -40,9 +39,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(providers: [
       ChangeNotifierProvider<FirebaseServices>(
         create: (context) => firebaseServices,
-      ),
-        // ChangeNotifierProvider<DailyWorkoutProvider>(create: (context) => DailyWorkoutProvider()),
-      
+      ),      
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -51,7 +48,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 255, 255)),
         useMaterial3: false,
       ),
-      home:   auth_view(),
+      home:    auth_view(),
       
       routes: {
           '/loginRoute': (context) => const LoginView(),
@@ -61,10 +58,11 @@ class MyApp extends StatelessWidget {
           '/workoutPlanningRoute': (context) => const WorkoutPlannerScreen(),
           '/mesocycleRoute': (context) => const MesocycleTracker(),
           '/recommendarRoute': (context) => const ExerciseRecommendation(),
-          '/recomHomeRoute': (context) => const RecomHomeScreen(),
           '/dailyWorkoutRoute': (context) => const DailyWorkoutScreen(),
-          '/WorkoutHistoryRoute': (context) => const WorkoutHistoryScreen(),
-          '/analysisRoute': (context) => const PerformanceAnalysisScreen(),
+          '/analysisRoute': (context) => const WorkoutAnalysisScreen(),
+          '/recoveryFormRoute': (context) => RecoveryFormPage(),
+          '/workoutFeedbackRoute': (context) => const WorkoutFeedbackScreen(),
+          '/WorkoutDetailRoute': (context) => const WorkoutDetailScreen(),
         },
     ),
     
