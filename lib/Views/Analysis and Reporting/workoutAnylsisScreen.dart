@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gain_wave_app/Views/Analysis%20and%20Reporting/AnalysisDataService.dart';
+import 'package:gain_wave_app/utillities/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class WorkoutAnalysisScreen extends StatefulWidget {
@@ -91,19 +93,32 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryBG,
       appBar: AppBar(
-        title: const Text('Workout Summary'),
+        backgroundColor: primaryBG,
+        elevation: 0,
+        title: Text(
+          'Workout Summary',
+          style: GoogleFonts.roboto(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: _loadData,
           ),
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: accentMain))
           : RefreshIndicator(
               onRefresh: _loadData,
+              color: accentMain,
+              backgroundColor: secondaryBG,
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -117,6 +132,7 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
                     _buildMuscleGroupDistribution(),
                     const SizedBox(height: 24),
                     _buildRecentWorkouts(),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),
@@ -128,11 +144,12 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Last 7 Days',
-          style: TextStyle(
-            fontSize: 20,
+          style: GoogleFonts.roboto(
+            fontSize: 22,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 12),
@@ -142,7 +159,7 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
               child: _buildSummaryCard(
                 'Total Workouts',
                 _totalWorkouts.toString(),
-                Icons.fitness_center,
+                Icons.fitness_center_rounded,
               ),
             ),
             const SizedBox(width: 12),
@@ -150,7 +167,7 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
               child: _buildSummaryCard(
                 'Total Volume',
                 _totalVolume.toString(),
-                Icons.analytics,
+                Icons.analytics_rounded,
               ),
             ),
           ],
@@ -162,7 +179,7 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
               child: _buildSummaryCard(
                 'Workout Time',
                 '${_totalMinutes} min',
-                Icons.timer,
+                Icons.timer_rounded,
               ),
             ),
             const SizedBox(width: 12),
@@ -170,7 +187,7 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
               child: _buildSummaryCard(
                 'Avg Volume',
                 _avgVolume.toStringAsFixed(1),
-                Icons.analytics,
+                Icons.show_chart_rounded,
               ),
             ),
           ],
@@ -181,8 +198,9 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
 
   Widget _buildSummaryCard(String title, String value, IconData icon) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      color: secondaryBG,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -190,23 +208,37 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
           children: [
             Row(
               children: [
-                Icon(icon, color: Theme.of(context).primaryColor),
-                const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 41, 61, 23),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: accentMain, size: 22),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  
+                  child: Text(
+                    title,
+                    style: GoogleFonts.roboto(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white70,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               value,
-              style: const TextStyle(
+              style: GoogleFonts.roboto(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
           ],
@@ -218,11 +250,19 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
   Widget _buildMuscleVolumeChart() {
     // Handle empty data case
     if (_volumeData.isEmpty) {
-      return const Card(
+      return Card(
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        color: secondaryBG,
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Center(
-            child: Text('No muscle volume data available'),
+            child: Text(
+              'No muscle volume data available',
+              style: GoogleFonts.roboto(
+                color: Colors.white70,
+              ),
+            ),
           ),
         ),
       );
@@ -231,19 +271,21 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Muscle Volume Trend',
-          style: TextStyle(
-            fontSize: 20,
+          style: GoogleFonts.roboto(
+            fontSize: 22,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 12),
         SizedBox(
           height: 240,
           child: Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 6,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            color: secondaryBG,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: LineChart(
@@ -252,6 +294,12 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
                     show: true,
                     drawVerticalLine: false,
                     horizontalInterval: 50,
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: Colors.white.withOpacity(0.1),
+                        strokeWidth: 1,
+                      );
+                    },
                   ),
                   titlesData: FlTitlesData(
                     rightTitles: const AxisTitles(
@@ -271,7 +319,10 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Text(
                                 DateFormat('MM/dd').format(date),
-                                style: const TextStyle(fontSize: 10),
+                                style: GoogleFonts.roboto(
+                                  fontSize: 10,
+                                  color: Colors.white70,
+                                ),
                               ),
                             );
                           }
@@ -286,13 +337,19 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
                         getTitlesWidget: (value, meta) {
                           return Text(
                             value.toInt().toString(),
-                            style: const TextStyle(fontSize: 10),
+                            style: GoogleFonts.roboto(
+                              fontSize: 10,
+                              color: Colors.white70,
+                            ),
                           );
                         },
                       ),
                     ),
                   ),
-                  borderData: FlBorderData(show: true),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                  ),
                   minX: 0,
                   maxX: _volumeData.length - 1.0,
                   minY: _getMinY(),
@@ -306,13 +363,31 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
                         );
                       }),
                       isCurved: true,
-                      color: Theme.of(context).primaryColor,
+                      color: accentMain,
                       barWidth: 3,
                       isStrokeCapRound: true,
-                      dotData: const FlDotData(show: true),
+                      dotData: FlDotData(
+                        show: true,
+                        getDotPainter: (spot, percent, barData, index) {
+                          return FlDotCirclePainter(
+                            radius: 4,
+                            color: accentMain,
+                            strokeWidth: 2,
+                            strokeColor: Colors.white,
+                          );
+                        },
+                      ),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: Theme.of(context).primaryColor.withOpacity(0.2),
+                        color: accentMain.withOpacity(0.2),
+                        gradient: LinearGradient(
+                          colors: [
+                            accentMain.withOpacity(0.4),
+                            accentMain.withOpacity(0.0),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
                       ),
                     ),
                   ],
@@ -353,33 +428,38 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Muscle Group Focus',
-          style: TextStyle(
-            fontSize: 20,
+          style: GoogleFonts.roboto(
+            fontSize: 22,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 12),
         Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 6,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          color: secondaryBG,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: _muscleGroupSummary.entries.map((entry) {
                 final total = _muscleGroupSummary.values.fold(0, (sum, count) => sum + count);
                 final percentage = total > 0 ? (entry.value / total) * 100 : 0;
                 
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Row(
                     children: [
                       Expanded(
                         flex: 3,
                         child: Text(
                           entry.key,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       Expanded(
@@ -389,13 +469,18 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
                           children: [
                             LinearProgressIndicator(
                               value: percentage / 100,
-                              minHeight: 8,
-                              backgroundColor: Colors.grey[300],
+                              minHeight: 10,
+                              backgroundColor: Colors.white.withOpacity(0.1),
+                              color: accentMain,
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 6),
                             Text(
                               '${percentage.toStringAsFixed(1)}% (${entry.value} workouts)',
-                              style: const TextStyle(fontSize: 12),
+                              style: GoogleFonts.roboto(
+                                fontSize: 12,
+                                color: Colors.white70,
+                              ),
                             ),
                           ],
                         ),
@@ -413,7 +498,12 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
 
   Widget _buildRecentWorkouts() {
     if (_workoutData.isEmpty) {
-      return const Center(child: Text('No recent workouts'));
+      return Center(
+        child: Text(
+          'No recent workouts',
+          style: GoogleFonts.roboto(color: Colors.white70),
+        ),
+      );
     }
 
     // Create a flat list of all workouts from all days
@@ -443,41 +533,69 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Recent Workouts',
-          style: TextStyle(
-            fontSize: 20,
+          style: GoogleFonts.roboto(
+            fontSize: 22,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 12),
         if (recentWorkouts.isEmpty)
-          const Center(child: Text('No recent workouts')),
+          Center(
+            child: Text(
+              'No recent workouts',
+              style: GoogleFonts.roboto(color: Colors.white70),
+            ),
+          ),
         ...recentWorkouts.map((workout) {
           return Card(
-            margin: const EdgeInsets.only(bottom: 8),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.only(bottom: 12),
+            elevation: 6,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            color: secondaryBG,
             child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               title: Text(
                 workout['exerciseName'] as String,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               subtitle: Text(
                 '${workout['muscleGroup']} • ${workout['sets']} sets × ${workout['reps']} reps • ${DateFormat('MMM dd, yyyy').format(workout['date'] as DateTime)}',
-              ),
-              leading: CircleAvatar(
-                backgroundColor: Theme.of(context).primaryColor,
-                child: const Icon(
-                  Icons.fitness_center_rounded,
-                  color: Colors.white,
-                  size: 20,
+                style: GoogleFonts.roboto(
+                  color: Colors.white70,
+                  fontSize: 13,
                 ),
               ),
-              trailing: Text(
-                '${workout['weight']} kg',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+              leading: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 41, 61, 23),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.fitness_center_rounded,
+                  color: accentMain,
+                  size: 22,
+                ),
+              ),
+              trailing: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: accentMain.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${workout['weight']} kg',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    color: accentMain,
+                  ),
                 ),
               ),
             ),
@@ -486,23 +604,4 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
       ],
     );
   }
-  
-  // IconData _getMuscleGroupIcon(String muscleGroup) {
-  //   switch (muscleGroup.toLowerCase()) {
-  //     case 'chest':
-  //       return Icons.accessibility_new;
-  //     case 'back':
-  //       return Icons.airline_seat_flat;
-  //     case 'legs':
-  //       return Icons.directions_walk;
-  //     case 'shoulders':
-  //       return Icons.fitness_center;
-  //     case 'arms':
-  //       return Icons.sports_gymnastics;
-  //     case 'abs':
-  //       return Icons.rectangle;
-  //     default:
-  //       return Icons.fitness_center;
-  //   }
-  // }
 }

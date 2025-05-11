@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/utillities/Providers/dailyWorkoutService.dart';
+import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,7 +13,7 @@ class DailyWorkoutScreen extends StatefulWidget {
 
 class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
   final DailyWorkoutService _dailyWorkoutService = DailyWorkoutService();
-  
+
   // Form controllers
   final _formKey = GlobalKey<FormState>();
   DateTime _selectedDate = DateTime.now();
@@ -22,7 +23,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
   final TextEditingController _repsController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _restTimeController = TextEditingController();
-  final TextEditingController _workoutDurationController = TextEditingController();
+  final TextEditingController _workoutDurationController =
+      TextEditingController();
 
   // List of muscle groups
   final List<String> _muscleGroups = [
@@ -48,7 +50,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
 
   Future<void> _loadTodaysWorkouts() async {
     try {
-      final workouts = await _dailyWorkoutService.getWorkoutsForDate(_selectedDate);
+      final workouts =
+          await _dailyWorkoutService.getWorkoutsForDate(_selectedDate);
       setState(() {
         _todaysWorkouts = workouts;
       });
@@ -136,22 +139,25 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
   Future<void> _deleteWorkout(String dateId, String workoutId) async {
     // Show confirmation dialog
     final bool confirmDelete = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Workout'),
-        content: const Text('Are you sure you want to delete this workout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('CANCEL'),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Delete Workout'),
+            content:
+                const Text('Are you sure you want to delete this workout?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('CANCEL'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child:
+                    const Text('DELETE', style: TextStyle(color: Colors.red)),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('DELETE', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
 
     if (!confirmDelete) return;
 
@@ -162,7 +168,7 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
     try {
       await _dailyWorkoutService.deleteWorkoutData(dateId, workoutId);
       await _loadTodaysWorkouts();
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Workout deleted successfully')),
       );
@@ -180,9 +186,10 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryBG,
       appBar: AppBar(
-        title: const Text('Track Daily Workout'),
-        backgroundColor: Colors.blue,
+        title: const Text('Track Daily Workout',style: TextStyle(color: accentMain, fontSize: 20, fontWeight: FontWeight.bold)),
+        backgroundColor: secondaryBG,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -193,7 +200,11 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                 children: [
                   // Date selector
                   Card(
-                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    color: secondaryBG,
+                    elevation: 6,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -202,6 +213,7 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                           const Text(
                             'Date',
                             style: TextStyle(
+                              color: accentMain,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -210,19 +222,24 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                           InkWell(
                             onTap: () => _selectDate(context),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    DateFormat('EEEE, MMM d, yyyy').format(_selectedDate),
-                                    style: const TextStyle(fontSize: 16),
+                                    DateFormat('EEEE, MMM d, yyyy')
+                                        .format(_selectedDate),
+                                    style: const TextStyle(
+                                        fontSize: 16, color: textMain),
                                   ),
-                                  const Icon(Icons.calendar_today),
+                                  const Icon(Icons.calendar_today,
+                                      color: textMain),
                                 ],
                               ),
                             ),
@@ -236,7 +253,11 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                   // Today's workouts section
                   if (_todaysWorkouts.isNotEmpty) ...[
                     Card(
-                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: secondaryBG,
+                      elevation: 6,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
@@ -245,6 +266,7 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                             Text(
                               'Workouts on ${DateFormat('EEEE, MMM d').format(_selectedDate)}',
                               style: const TextStyle(
+                                color: accentMain,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -260,14 +282,19 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                 return ListTile(
                                   contentPadding: EdgeInsets.zero,
                                   title: Text(
-                                    workout['exerciseName'] ?? 'Unknown exercise',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                    workout['exerciseName'] ??
+                                        'Unknown exercise',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: textMain),
                                   ),
                                   subtitle: Text(
                                     '${workout['muscleGroup']} • ${workout['sets']} sets • ${workout['reps']} reps',
+                                    style: const TextStyle(color: textMain),
                                   ),
                                   trailing: IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red),
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
                                     onPressed: () => _deleteWorkout(
                                       workout['id'],
                                       workout['workoutId'],
@@ -297,26 +324,34 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Card(
-                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          color: secondaryBG,
+                          elevation: 6,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'Add New Workout',
                                       style: TextStyle(
+                                        color: accentMain,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     // Add reset button
                                     TextButton.icon(
-                                      icon: const Icon(Icons.refresh, size: 18),
-                                      label: const Text('Reset'),
+                                      icon: const Icon(Icons.refresh,
+                                          size: 18, color: Colors.red),
+                                      label: const Text('Reset',
+                                          style: TextStyle(color: Colors.red)),
                                       onPressed: () {
                                         _exerciseNameController.clear();
                                         _setsController.clear();
@@ -332,13 +367,29 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                   ],
                                 ),
                                 const SizedBox(height: 16),
-                                
+
                                 // Exercise name
                                 TextFormField(
                                   controller: _exerciseNameController,
                                   decoration: const InputDecoration(
                                     labelText: 'Exercise Name',
-                                    border: OutlineInputBorder(),
+                                    labelStyle: TextStyle(color: Colors.grey),
+                                    border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(color: accentMain),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(color: accentMain),
+                                    ),
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -353,20 +404,39 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                 DropdownButtonFormField<String>(
                                   decoration: const InputDecoration(
                                     labelText: 'Muscle Group',
-                                    border: OutlineInputBorder(),
+                                    labelStyle: TextStyle(color: Colors.grey),
+                                    border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(color: textMain),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide:
+                                          BorderSide(color: textMain),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(color: textMain),
+                                    ),
                                   ),
                                   value: _selectedMuscleGroup,
                                   items: _muscleGroups.map((String group) {
                                     return DropdownMenuItem<String>(
                                       value: group,
-                                      child: Text(group),
+                                      child: Text(group,
+                                          style:
+                                              const TextStyle(color: Color.fromARGB(255, 88, 177, 0))),
                                     );
                                   }).toList(),
                                   onChanged: (String? newValue) {
                                     if (newValue != null) {
                                       setState(() {
                                         _selectedMuscleGroup = newValue;
-                                      });
+                                      }
+                                      );
                                     }
                                   },
                                 ),
@@ -378,7 +448,11 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
 
                         // Training parameters card
                         Card(
-                          elevation: 2,
+                          elevation: 6,
+                          color: secondaryBG,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
@@ -389,10 +463,11 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
+                                    color: accentMain,
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                
+
                                 // Sets & Reps (side by side)
                                 Row(
                                   children: [
@@ -401,7 +476,26 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                         controller: _setsController,
                                         decoration: const InputDecoration(
                                           labelText: 'Sets',
-                                          border: OutlineInputBorder(),
+                                          labelStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: accentMain),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: Colors.grey),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: accentMain),
+                                          ),
                                         ),
                                         keyboardType: TextInputType.number,
                                         validator: (value) {
@@ -421,7 +515,26 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                         controller: _repsController,
                                         decoration: const InputDecoration(
                                           labelText: 'Reps',
-                                          border: OutlineInputBorder(),
+                                          labelStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: accentMain),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: Colors.grey),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: accentMain),
+                                          ),
                                         ),
                                         keyboardType: TextInputType.number,
                                         validator: (value) {
@@ -444,7 +557,23 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                   controller: _weightController,
                                   decoration: const InputDecoration(
                                     labelText: 'Weight (kg)',
-                                    border: OutlineInputBorder(),
+                                    labelStyle: TextStyle(color: Colors.grey),
+                                    border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(color: accentMain),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      borderSide: BorderSide(color: accentMain),
+                                    ),
                                   ),
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
@@ -467,7 +596,26 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                         controller: _restTimeController,
                                         decoration: const InputDecoration(
                                           labelText: 'Rest Time',
-                                          border: OutlineInputBorder(),
+                                          labelStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: accentMain),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: Colors.grey),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: accentMain),
+                                          ),
                                           hintText: 'e.g., 30 sec, 1 min',
                                         ),
                                         validator: (value) {
@@ -484,7 +632,26 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                         controller: _workoutDurationController,
                                         decoration: const InputDecoration(
                                           labelText: 'Duration',
-                                          border: OutlineInputBorder(),
+                                          labelStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: accentMain),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: Colors.grey),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            borderSide:
+                                                BorderSide(color: accentMain),
+                                          ),
                                           hintText: 'e.g., 20 min, 1 hour',
                                         ),
                                         validator: (value) {
@@ -507,15 +674,19 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                         ElevatedButton(
                           onPressed: _saveWorkoutData,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: accentMain,
+                            padding: const EdgeInsets.symmetric(vertical: 22),
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                           child: const Text(
                             'ADD WORKOUT',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
                         ),

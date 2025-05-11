@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:intl/intl.dart';
 
 class WorkoutDetailScreen extends StatelessWidget {
@@ -19,9 +20,15 @@ class WorkoutDetailScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: primaryBG,
       appBar: AppBar(
-        title: Text(workout['exerciseName'] ?? 'Workout Details'),
-        backgroundColor: Colors.blue,
+        title: Text(workout['exerciseName'] ?? 'Workout Details',
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: accentMain
+            )),
+        backgroundColor: secondaryBG,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -30,9 +37,11 @@ class WorkoutDetailScreen extends StatelessWidget {
           children: [
             // Workout detail card
             Card(
-              elevation: 3,
+              color: secondaryBG,
+              shadowColor: Colors.black,
+              elevation: 6,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -43,6 +52,7 @@ class WorkoutDetailScreen extends StatelessWidget {
                     Text(
                       workout['exerciseName'] ?? 'Unknown Exercise',
                       style: const TextStyle(
+                        color: accentMain,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -53,7 +63,7 @@ class WorkoutDetailScreen extends StatelessWidget {
                       workout['muscleGroup'] ?? 'Unknown Muscle Group',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.blue[700],
+                        color: Colors.grey,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -75,6 +85,7 @@ class WorkoutDetailScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: textMain,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -136,7 +147,7 @@ class WorkoutDetailScreen extends StatelessWidget {
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, color: Colors.blue[700], size: 20),
+        Icon(icon, color: accentMain, size: 20),
         const SizedBox(width: 8),
         Expanded(
           child: Column(
@@ -146,12 +157,13 @@ class WorkoutDetailScreen extends StatelessWidget {
                 label,
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: textMain,
                 ),
               ),
               Text(
                 value,
                 style: const TextStyle(
+                  color: Colors.grey,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -166,25 +178,28 @@ class WorkoutDetailScreen extends StatelessWidget {
   // Helper method to build detail items (for grid layout)
   Widget _buildDetailItem(IconData icon, String label, String value) {
     return Card(
-      elevation: 1,
-      color: Colors.grey[50],
+      elevation: 6,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      shadowColor: Colors.black,
+      color:  const Color.fromARGB(255, 66, 66, 66),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         child: Column(
           children: [
-            Icon(icon, color: Colors.blue[700], size: 24),
+            Icon(icon, color:accentMain, size: 24),
             const SizedBox(height: 8),
             Text(
               label,
               style: const TextStyle(
                 fontSize: 14,
-                color: Colors.grey,
+                color: textMain,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               value,
               style: const TextStyle(
+                color: textMain,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
