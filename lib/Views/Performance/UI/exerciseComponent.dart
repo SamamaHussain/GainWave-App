@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:gain_wave_app/Views/Performance/Model/exerciseModel.dart';
-import 'package:gain_wave_app/Views/Performance/Services/storestats.dart';
 import 'package:gain_wave_app/Views/Performance/UI/exerciseDetailPage.dart';
-
+import 'package:gain_wave_app/utillities/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ExerciseTile extends StatelessWidget {
   final Exercise exercise;
@@ -12,116 +12,116 @@ class ExerciseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ExerciseDetailPage(exercise: exercise),
-            ),
-          );
-        },
-        child: Row(
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                exercise.imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.fitness_center, size: 40),
-                  );
-                },
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      exercise.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Target: ${exercise.targetMuscle}',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    Text(
-                      'Equipment: ${exercise.equipment}',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.chevron_right),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class StatsDialog extends StatelessWidget {
-  final WorkoutStats workoutStats;
-
-  const StatsDialog({Key? key, required this.workoutStats}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Reset Stats'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.timer),
-            title: const Text('Total Time Exercised'),
-            subtitle: StreamBuilder<int>(
-              stream: workoutStats.timeStream,
-              initialData: workoutStats.totalTimeExercised,
-              builder: (context, snapshot) {
-                return Text(
-                  workoutStats.getFormattedTotalTime(),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
-            ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+      decoration: BoxDecoration(
+        color: secondaryBG,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ExerciseDetailPage(exercise: exercise),
+              ),
+            );
           },
-          child: const Text('CLOSE'),
+          child: Padding(
+            padding: const EdgeInsets.all(9.0),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    color: primaryBG,
+                    child: Image.asset(
+                      exercise.imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: primaryBG,
+                          child: const Icon(
+                            Icons.fitness_center,
+                            size: 33,
+                            color: accentMain,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        exercise.name,
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Target: ${exercise.targetMuscle}',
+                              style: GoogleFonts.roboto(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Equipment: ${exercise.equipment}',
+                              style: GoogleFonts.roboto(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: primaryBG,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.all(3.0),
+                  child: const Icon(
+                    Icons.chevron_right,
+                    color: accentMain,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        TextButton(
-          onPressed: () {
-            workoutStats.resetStats();
-            Navigator.of(context).pop();
-          },
-          child: const Text('RESET STATS'),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -132,10 +132,27 @@ class ExerciseSearchDelegate extends SearchDelegate<Exercise?> {
   ExerciseSearchDelegate({required this.exercises});
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    return ThemeData(
+      appBarTheme: const AppBarTheme(
+        backgroundColor: primaryBG,
+        iconTheme: IconThemeData(color: accentMain),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: GoogleFonts.roboto(color: Colors.white.withOpacity(0.7)),
+      ),
+      textTheme: TextTheme(
+        titleLarge: GoogleFonts.roboto(color: Colors.white),
+      ),
+      scaffoldBackgroundColor: primaryBG,
+    );
+  }
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(Icons.clear),
+        icon: const Icon(Icons.clear, color: accentMain),
         onPressed: () {
           query = '';
         },
@@ -146,7 +163,7 @@ class ExerciseSearchDelegate extends SearchDelegate<Exercise?> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back, color: accentMain),
       onPressed: () {
         close(context, null);
       },
@@ -170,37 +187,84 @@ class ExerciseSearchDelegate extends SearchDelegate<Exercise?> {
           exercise.equipment.toLowerCase().contains(query.toLowerCase());
     }).toList();
 
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        final exercise = results[index];
-        return ListTile(
-          leading: SizedBox(
-            width: 50,
-            height: 50,
-            child: Image.asset(
-              exercise.imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
+    return Container(
+      color: primaryBG,
+      child: results.isEmpty
+          ? Center(
+              child: Text(
+                'No exercises found',
+                style: GoogleFonts.roboto(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 16,
+                ),
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(8.0),
+              itemCount: results.length,
+              itemBuilder: (context, index) {
+                final exercise = results[index];
                 return Container(
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.fitness_center),
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                  decoration: BoxDecoration(
+                    color: secondaryBG,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        color: primaryBG,
+                        child: Image.asset(
+                          exercise.imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: primaryBG,
+                              child: const Icon(
+                                Icons.fitness_center,
+                                color: accentMain,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      exercise.name,
+                      style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Text(
+                      exercise.targetMuscle,
+                      style: GoogleFonts.roboto(
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                    ),
+                    onTap: () {
+                      close(context, exercise);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ExerciseDetailPage(exercise: exercise),
+                        ),
+                      );
+                    },
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: accentMain,
+                    ),
+                  ),
                 );
               },
             ),
-          ),
-          title: Text(exercise.name),
-          subtitle: Text(exercise.targetMuscle),
-          onTap: () {
-            close(context, exercise);
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ExerciseDetailPage(exercise: exercise),
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }
@@ -270,47 +334,86 @@ class _RestTimerDialogState extends State<RestTimerDialog> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Rest Time'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Take a break before the next set'),
-          const SizedBox(height: 24),
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: CircularProgressIndicator(
-                      value: _animation.value,
-                      strokeWidth: 8,
-                      backgroundColor: Colors.grey[300],
+    return Dialog(
+      backgroundColor: secondaryBG,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Rest Time',
+              style: GoogleFonts.roboto(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Take a break before the next set',
+              style: GoogleFonts.roboto(
+                fontSize: 16,
+                color: Colors.white.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: CircularProgressIndicator(
+                        value: _animation.value,
+                        strokeWidth: 8,
+                        backgroundColor: primaryBG,
+                        valueColor: const AlwaysStoppedAnimation<Color>(accentMain),
+                      ),
                     ),
-                  ),
-                  Text(
-                    _formatDuration(_secondsRemaining),
-                    style: const TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
+                    Text(
+                      _formatDuration(_secondsRemaining),
+                      style: GoogleFonts.roboto(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: widget.onSkip,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: accentMain,
+                  foregroundColor: primaryBG,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: widget.onSkip,
-          child: const Text('SKIP'),
+                  elevation: 0,
+                ),
+                child: Text(
+                  'SKIP REST',
+                  style: GoogleFonts.roboto(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

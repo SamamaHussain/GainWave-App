@@ -30,6 +30,8 @@ class WorkoutPlanDetailsScreen extends StatelessWidget {
           iconTheme: const IconThemeData(color: textMain),
         ),
         body: ListView(
+              physics: const BouncingScrollPhysics(),
+
           padding: const EdgeInsets.all(16.0),
           children: [
             Card(

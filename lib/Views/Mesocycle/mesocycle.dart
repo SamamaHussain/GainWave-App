@@ -565,6 +565,7 @@ class MesocycleTracker extends HookWidget {
     return Scaffold(
       backgroundColor: primaryBG,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: primaryBG,
         elevation: 0,
         title: Text(
@@ -606,6 +607,8 @@ class MesocycleTracker extends HookWidget {
                   ),
                 )
               : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+
                   padding: const EdgeInsets.all(16),
                   itemCount: mesocycles.value.length,
                   itemBuilder: (context, index) {

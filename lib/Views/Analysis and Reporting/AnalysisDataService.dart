@@ -23,7 +23,7 @@ class AnalysisDataService {
       final dateDocsSnapshot = await _firestore
           .collection('user')
           .doc(currentUserId)
-          .collection('Daily_Workout_Data')
+          .collection('dailyWorkoutData')
           .get();
 
       // Organize data by date

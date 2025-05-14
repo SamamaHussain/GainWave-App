@@ -636,6 +636,7 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 30),
             child: Column(

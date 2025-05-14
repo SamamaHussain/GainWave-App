@@ -5,6 +5,7 @@ import 'package:gain_wave_app/Views/Workout%20Planning/plannerModel.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WorkoutPlannerScreen extends StatefulWidget {
   const WorkoutPlannerScreen({Key? key}) : super(key: key);
@@ -45,19 +46,28 @@ class _WorkoutPlannerScreenState extends State<WorkoutPlannerScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+         appBar: AppBar(
+          centerTitle: true,
+        backgroundColor: primaryBG,
+        elevation: 0,
+        title: Text(
+          'Custom Workout Planner',
+          style: GoogleFonts.roboto(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        // centerTitle: true,
+      ),
         backgroundColor: primaryBG,
         body: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Customize Your Workout Plan',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textMain),
-              ),
-              const SizedBox(height: 20),
-              
-              // Questions section
               _buildQuestionCard(
                 'What is your preferred workout intensity?',
                 DropdownButton<String>(

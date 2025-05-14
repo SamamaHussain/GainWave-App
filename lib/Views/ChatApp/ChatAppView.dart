@@ -186,6 +186,7 @@ class _GymChatBotState extends State<GymChatBot> {
             children: [
               Expanded(
                 child: ListView.builder(
+    physics: const BouncingScrollPhysics(),
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {

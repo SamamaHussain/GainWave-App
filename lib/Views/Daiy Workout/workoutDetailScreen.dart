@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class WorkoutDetailScreen extends StatelessWidget {
@@ -22,15 +23,17 @@ class WorkoutDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: primaryBG,
       appBar: AppBar(
-        title: Text(workout['exerciseName'] ?? 'Workout Details',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: accentMain
-            )),
-        backgroundColor: secondaryBG,
+        centerTitle: true,
+        title:  Text('Workout Details',style:GoogleFonts.roboto(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),),
+          elevation: 0,
+        backgroundColor: primaryBG,
       ),
       body: SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +64,7 @@ class WorkoutDetailScreen extends StatelessWidget {
                     // Muscle group
                     Text(
                       workout['muscleGroup'] ?? 'Unknown Muscle Group',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
@@ -178,10 +181,10 @@ class WorkoutDetailScreen extends StatelessWidget {
   // Helper method to build detail items (for grid layout)
   Widget _buildDetailItem(IconData icon, String label, String value) {
     return Card(
-      elevation: 6,
+      elevation: 0,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       shadowColor: Colors.black,
-      color:  const Color.fromARGB(255, 66, 66, 66),
+      color:  Colors.black.withOpacity(0.2),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         child: Column(

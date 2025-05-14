@@ -20,7 +20,7 @@ class _PageNavControllerState extends State<PageNavController> {
   final totalScreens = const [
     home_page_view(),
     // ExerciseLibraryPage(),
-    ExerciseLibraryPage2(),
+    ExerciseLibraryPage(),
     GymChatBot(),
     ProfilePage(),
   ];

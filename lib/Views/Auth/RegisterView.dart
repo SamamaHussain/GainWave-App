@@ -173,12 +173,8 @@ void showSnackBar(BuildContext context,String message) {
                       }
                       else{
                         firebaseServices.signup(context);
-                        // firebaseServices.GetCurrentUserID();
                       log('from press func: ${firebaseServices.uid}');
                       // firestoreFuncs.saveUser(firebaseServices.uid, FirstNameController.text, LastNameController.text, EmailController.text);
-                      if(firebaseServices.errorCodeSignup=='invalid-email'){
-                        showSnackBar(context, 'This Email is Invalid');
-                      }
                       } 
                       }, 
                       style: ElevatedButton.styleFrom( padding:const  EdgeInsets.symmetric(vertical: 25.0), backgroundColor:const  Color(0xFF9dff3b), 

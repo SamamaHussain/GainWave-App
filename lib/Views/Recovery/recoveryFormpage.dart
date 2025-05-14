@@ -89,6 +89,8 @@ class _RecoveryFormPageState extends State<RecoveryFormPage> {
         body: Container(
           color: primaryBG,
           child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,

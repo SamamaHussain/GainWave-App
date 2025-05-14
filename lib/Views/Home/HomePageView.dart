@@ -42,9 +42,9 @@ class _home_page_viewState extends State<home_page_view> {
       final workoutsRef = FirebaseFirestore.instance
           .collection('user')
           .doc(userId)
-          .collection('Daily Workout Data')
+          .collection('dailyWorkoutData')
           .doc(today)
-          .collection('Workouts');
+          .collection('workouts');
       
       // Get workout count
       final workoutsSnapshot = await workoutsRef.get();
@@ -106,10 +106,9 @@ class _home_page_viewState extends State<home_page_view> {
             : CustomScrollView(
                 physics: const BouncingScrollPhysics(),
                 slivers: [
-                  // App Bar with User Greeting and Logout
                   SliverAppBar(
                     backgroundColor: primaryBG,
-                    expandedHeight: 120,
+                    expandedHeight: 80,
                     pinned: true,
                     flexibleSpace: FlexibleSpaceBar(
                       background: Container(
@@ -142,27 +141,27 @@ class _home_page_viewState extends State<home_page_view> {
                                 ),
                               ],
                             ),
-                            InkWell(
-                              onTap: () async {
-                                firebaseServices.sign_out();
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/loginRoute',
-                                  (_) => false,
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: secondaryBG,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const Icon(
-                                  Icons.logout_rounded,
-                                  color: Colors.white70,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
+                            // InkWell(
+                            //   onTap: () async {
+                            //     firebaseServices.sign_out();
+                            //     Navigator.of(context).pushNamedAndRemoveUntil(
+                            //       '/loginRoute',
+                            //       (_) => false,
+                            //     );
+                            //   },
+                            //   child: Container(
+                            //     padding: const EdgeInsets.all(10),
+                            //     decoration: BoxDecoration(
+                            //       color: secondaryBG,
+                            //       borderRadius: BorderRadius.circular(12),
+                            //     ),
+                            //     child: const Icon(
+                            //       Icons.logout_rounded,
+                            //       color: Colors.white70,
+                            //       size: 22,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -262,7 +261,7 @@ class _home_page_viewState extends State<home_page_view> {
                                   },
                                   style: TextButton.styleFrom(
                                     backgroundColor: primaryBG,
-                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -330,7 +329,7 @@ class _home_page_viewState extends State<home_page_view> {
                                 ),
                                 _buildFeatureCard(
                                   context,
-                                  'Analysis',
+                                  'Workout Analysis',
                                   Icons.bar_chart_rounded,
                                   '/analysisRoute',
                                 ),
@@ -388,7 +387,7 @@ class _home_page_viewState extends State<home_page_view> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          child: const Icon(Icons.play_arrow_rounded, size: 32, color: primaryBG),
+          child: const Icon(Icons.add, size: 32, color: primaryBG),
         ),
       ),
     );

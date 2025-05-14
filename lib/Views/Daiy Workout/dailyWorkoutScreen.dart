@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/utillities/Providers/dailyWorkoutService.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -188,12 +189,19 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
     return Scaffold(
       backgroundColor: primaryBG,
       appBar: AppBar(
-        title: const Text('Track Daily Workout',style: TextStyle(color: accentMain, fontSize: 20, fontWeight: FontWeight.bold)),
-        backgroundColor: secondaryBG,
+        centerTitle: true,
+        title:  Text('Track Daily Workout',style:GoogleFonts.roboto(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),),
+          elevation: 0,
+        backgroundColor: primaryBG,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -370,9 +378,10 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
 
                                 // Exercise name
                                 TextFormField(
+                                  style: const TextStyle(color: textMain),
                                   controller: _exerciseNameController,
                                   decoration: const InputDecoration(
-                                    labelText: 'Exercise Name',
+                                    labelText: 'Wrokout Name',
                                     labelStyle: TextStyle(color: Colors.grey),
                                     border: OutlineInputBorder(
                                       borderRadius:
@@ -473,6 +482,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                   children: [
                                     Expanded(
                                       child: TextFormField(
+                                                                          style: const TextStyle(color: textMain),
+
                                         controller: _setsController,
                                         decoration: const InputDecoration(
                                           labelText: 'Sets',
@@ -512,6 +523,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: TextFormField(
+                                                                          style: const TextStyle(color: textMain),
+
                                         controller: _repsController,
                                         decoration: const InputDecoration(
                                           labelText: 'Reps',
@@ -554,6 +567,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
 
                                 // Weight
                                 TextFormField(
+                                                                    style: const TextStyle(color: textMain),
+
                                   controller: _weightController,
                                   decoration: const InputDecoration(
                                     labelText: 'Weight (kg)',
@@ -593,6 +608,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                   children: [
                                     Expanded(
                                       child: TextFormField(
+                                                                          style: const TextStyle(color: textMain),
+
                                         controller: _restTimeController,
                                         decoration: const InputDecoration(
                                           labelText: 'Rest Time',
@@ -629,6 +646,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: TextFormField(
+                                                                          style: const TextStyle(color: textMain),
+
                                         controller: _workoutDurationController,
                                         decoration: const InputDecoration(
                                           labelText: 'Duration',

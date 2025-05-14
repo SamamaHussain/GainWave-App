@@ -676,6 +676,8 @@ class HistoryScreen extends StatelessWidget {
                 final entries = snapshot.data!;
 
                 return ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+
                   controller: scrollController,
                   padding: const EdgeInsets.all(8),
                   itemCount: entries.length,
@@ -850,4 +852,3 @@ class WeeklyVolumeScreen extends StatelessWidget {
     );
   }
 }
-

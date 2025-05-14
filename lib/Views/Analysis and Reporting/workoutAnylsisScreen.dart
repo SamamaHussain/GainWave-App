@@ -120,8 +120,9 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
               color: accentMain,
               backgroundColor: secondaryBG,
               child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(16),
-                physics: const AlwaysScrollableScrollPhysics(),
+                // physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

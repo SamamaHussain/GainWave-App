@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:gain_wave_app/Views/Performance/Model/exerciseModel.dart';
-import 'package:gain_wave_app/Views/Performance/Services/storestats.dart';
 import 'package:gain_wave_app/Views/Performance/UI/exerciseComponent.dart';
+import 'package:gain_wave_app/utillities/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ExerciseDetailPage extends StatefulWidget {
   final Exercise exercise;
@@ -17,13 +18,10 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> with TickerProv
   late TabController _tabController;
   int _currentSet = 1;
   int _reps = 0;
-  // int _currentTab = 0;
   bool _isRunning = false;
   int _secondsElapsed = 0;
   int _restSecondsRemaining = 0;
   bool _isResting = false;
-  final workoutStats = WorkoutStats();
-  int _sessionStartTime = 0;
   
   // Stopwatch controllers
   late Stopwatch _stopwatch;
@@ -36,12 +34,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> with TickerProv
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
-      setState(() {
-        // _currentTab = _tabController.index;
-      });
-    });
+    _tabController = TabController(length: 2, vsync: this);
     
     _reps = widget.exercise.defaultReps;
     _stopwatch = Stopwatch();
@@ -79,16 +72,8 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> with TickerProv
     setState(() {
       if (_isRunning) {
         _stopwatch.stop();
-        // Record exercise time
-        if (_sessionStartTime > 0) {
-          final sessionTime = DateTime.now().millisecondsSinceEpoch - _sessionStartTime;
-          workoutStats.addExerciseTime((sessionTime / 1000).round());
-          _sessionStartTime = 0;
-        }
       } else {
         _stopwatch.start();
-        // Start timing this exercise session
-        _sessionStartTime = DateTime.now().millisecondsSinceEpoch;
       }
       _isRunning = !_isRunning;
     });
@@ -96,16 +81,9 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> with TickerProv
   
   void _resetStopwatch() {
     setState(() {
-      // If we're stopping an active session, record the time
-      if (_isRunning && _sessionStartTime > 0) {
-        final sessionTime = DateTime.now().millisecondsSinceEpoch - _sessionStartTime;
-        workoutStats.addExerciseTime((sessionTime / 1000).round());
-      }
-      
       _stopwatch.reset();
       _secondsElapsed = 0;
       _isRunning = false;
-      _sessionStartTime = 0;
     });
   }
   
@@ -124,13 +102,6 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> with TickerProv
   }
   
   void _completeSet() {
-    // Add the exercise time to total stats
-    if (_isRunning && _sessionStartTime > 0) {
-      final sessionTime = DateTime.now().millisecondsSinceEpoch - _sessionStartTime;
-      workoutStats.addExerciseTime((sessionTime / 1000).round());
-      _sessionStartTime = 0; // Reset for next set
-    }
-    
     _resetStopwatch();
     setState(() {
       _currentSet++;
@@ -168,13 +139,6 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> with TickerProv
     _tabController.dispose();
     _exerciseAnimationController.dispose();
     _periodicTimer.cancel();
-    
-    // Add any remaining exercise time before disposing
-    if (_isRunning && _sessionStartTime > 0) {
-      final sessionTime = DateTime.now().millisecondsSinceEpoch - _sessionStartTime;
-      workoutStats.addExerciseTime((sessionTime / 1000).round());
-    }
-    
     super.dispose();
   }
 
@@ -186,20 +150,24 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> with TickerProv
   
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: Colors.grey[600],
+            style: GoogleFonts.roboto(
+              color: Colors.white70,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
             ),
           ),
           Text(
             value,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
+            style: GoogleFonts.roboto(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -209,15 +177,34 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> with TickerProv
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final double padding = screenWidth < 360 ? 16.0 : 24.0;
+    
     return Scaffold(
+      backgroundColor: primaryBG,
       appBar: AppBar(
-        title: Text(widget.exercise.name),
+        backgroundColor: primaryBG,
+        elevation: 0,
+        title: Text(
+          widget.exercise.name,
+          style: GoogleFonts.roboto(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         bottom: TabBar(
           controller: _tabController,
+          indicatorColor: accentMain,
+          labelColor: accentMain,
+          unselectedLabelColor: Colors.white70,
+          labelStyle: GoogleFonts.roboto(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
           tabs: const [
             Tab(text: 'Info'),
             Tab(text: 'Perform'),
-            Tab(text: 'History'),
           ],
         ),
       ),
@@ -226,324 +213,413 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> with TickerProv
         children: [
           // Info Tab
           SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Image
-                Center(
-                  child: Container(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.all(padding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Image with improved container
+                  Container(
                     height: 200,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Image.asset(
-                      widget.exercise.imageUrl,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.fitness_center, size: 64),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                
-                // Exercise details
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Details',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      color: secondaryBG,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
-                        const Divider(),
-                        _buildDetailRow('Target Muscle', widget.exercise.targetMuscle),
-                        _buildDetailRow('Equipment', widget.exercise.equipment),
-                        _buildDetailRow('Default Sets', widget.exercise.defaultSets.toString()),
-                        _buildDetailRow('Default Reps', widget.exercise.defaultReps.toString()),
-                        _buildDetailRow('Rest Time', '${widget.exercise.defaultRestTime} seconds'),
                       ],
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                
-                // Description
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Instructions',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Divider(),
-                        Text(widget.exercise.description),
-                      ],
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        widget.exercise.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: secondaryBG,
+                            child: const Icon(
+                              Icons.fitness_center,
+                              size: 64,
+                              color: accentMain,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 24),
+                  
+                  // Exercise details card
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: secondaryBG,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.info_outline_rounded,
+                                color: accentMain,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Details',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(color: Colors.white24, height: 24),
+                          _buildDetailRow('Target Muscle', widget.exercise.targetMuscle),
+                          _buildDetailRow('Equipment', widget.exercise.equipment),
+                          _buildDetailRow('Default Sets', widget.exercise.defaultSets.toString()),
+                          _buildDetailRow('Default Reps', widget.exercise.defaultReps.toString()),
+                          _buildDetailRow('Rest Time', '${widget.exercise.defaultRestTime} seconds'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  // Instructions card
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: secondaryBG,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.description_rounded,
+                                color: accentMain,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Instructions',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(color: Colors.white24, height: 24),
+                          Text(
+                            widget.exercise.description,
+                            style: GoogleFonts.roboto(
+                              color: Colors.white,
+                              fontSize: 16,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           
           // Perform Tab
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                // Set indicator
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'SET $_currentSet OF ${widget.exercise.defaultSets}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.all(padding),
+              child: Column(
+                children: [
+                  // Set indicator
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      color: accentMain,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: accentMain.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                
-                // Rep counter
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        const Text(
-                          'REPS',
-                          style: TextStyle(
+                        Text(
+                          'SET',
+                          style: GoogleFonts.roboto(
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
+                            color: primaryBG.withOpacity(0.8),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove_circle_outline, size: 32),
-                              onPressed: _decrementReps,
-                            ),
-                            const SizedBox(width: 16),
-                            Text(
-                              '$_reps',
-                              style: const TextStyle(
-                                fontSize: 48,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            IconButton(
-                              icon: const Icon(Icons.add_circle_outline, size: 32),
-                              onPressed: _incrementReps,
-                            ),
-                          ],
-                        ),
                         Text(
-                          'Target: ${widget.exercise.defaultReps}',
-                          style: TextStyle(
-                            color: Colors.grey[600],
+                          '$_currentSet OF ${widget.exercise.defaultSets}',
+                          style: GoogleFonts.roboto(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: primaryBG,
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 24),
-                
-                // Stopwatch
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'TIMER',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          _formatDuration(_secondsElapsed),
-                          style: const TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.w300,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: _toggleStopwatch,
-                              style: ElevatedButton.styleFrom(
-                                shape: const CircleBorder(),
-                                padding: const EdgeInsets.all(16),
-                              ),
-                              child: Icon(
-                                _isRunning ? Icons.pause : Icons.play_arrow,
-                                size: 32,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            ElevatedButton(
-                              onPressed: _resetStopwatch,
-                              style: ElevatedButton.styleFrom(
-                                shape: const CircleBorder(),
-                                padding: const EdgeInsets.all(16),
-                              ),
-                              child: const Icon(
-                                Icons.refresh,
-                                size: 32,
-                              ),
-                            ),
-                          ],
+                  const SizedBox(height: 24),
+                  
+                  // Rep counter
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: secondaryBG,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                
-                const Spacer(),
-                
-                // Complete set button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _completeSet,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    ),
-                    child: const Text(
-                      'COMPLETE SET',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                
-                // Display total time exercised
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: StreamBuilder<int>(
-                    stream: workoutStats.timeStream,
-                    initialData: workoutStats.totalTimeExercised,
-                    builder: (context, snapshot) {
-                      return Text(
-                        'Total time exercised: ${workoutStats.getFormattedTotalTime()}',
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          // History Tab - Now includes stats
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Card(
-                  margin: const EdgeInsets.all(16.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Exercise Statistics',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Divider(),
-                        ListTile(
-                          leading: const Icon(Icons.timer),
-                          title: const Text('Total Time Exercised'),
-                          trailing: StreamBuilder<int>(
-                            stream: workoutStats.timeStream,
-                            initialData: workoutStats.totalTimeExercised,
-                            builder: (context, snapshot) {
-                              return Text(
-                                workoutStats.getFormattedTotalTime(),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                    child: Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.repeat_rounded,
+                                color: accentMain,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'REPS',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
                                 ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'This data can be synced with Firebase. Additional statistics will appear here as you complete workouts.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Exercise data will be stored to Firebase'),
                               ),
-                            );
-                          },
-                          icon: const Icon(Icons.cloud_upload),
-                          label: const Text('SYNC WITH FIREBASE'),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: primaryBG,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.remove, size: 24),
+                                  onPressed: _decrementReps,
+                                  color: accentMain,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 100,
+                                child: Center(
+                                  child: Text(
+                                    '$_reps',
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 48,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: primaryBG,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.add, size: 24),
+                                  onPressed: _incrementReps,
+                                  color: accentMain,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Target: ${widget.exercise.defaultReps}',
+                            style: GoogleFonts.roboto(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  // Stopwatch
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: secondaryBG,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
+                    child: Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.timer_rounded,
+                                color: accentMain,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'TIMER',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            _formatDuration(_secondsElapsed),
+                            style: GoogleFonts.roboto(
+                              fontSize: 48,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: _isRunning ? primaryBG : accentMain,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: IconButton(
+                                  onPressed: _toggleStopwatch,
+                                  icon: Icon(
+                                    _isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                                    size: 25,
+                                    color: _isRunning ? accentMain : primaryBG,
+                                  ),
+                                  padding: const EdgeInsets.all(12),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: primaryBG,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: IconButton(
+                                  onPressed: _resetStopwatch,
+                                  icon: const Icon(
+                                    Icons.refresh_rounded,
+                                    size: 25,
+                                    color: accentMain,
+                                  ),
+                                  padding: const EdgeInsets.all(12),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                
-                const SizedBox(height: 32),
-                
-                Icon(
-                  Icons.history,
-                  size: 64,
-                  color: Colors.grey[400],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Workout history will appear here',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey[600],
+                  const SizedBox(height: 32),
+                  
+                  // Complete set button
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: accentMain.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      onPressed: _completeSet,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: accentMain,
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'COMPLETE SET',
+                        style: GoogleFonts.roboto(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: primaryBG,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
           ),
         ],
