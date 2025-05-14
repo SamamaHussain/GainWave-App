@@ -55,7 +55,7 @@ class _ExerciseLibraryPageState extends State<ExerciseLibraryPage> {
               width: 80,
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: secondaryBG,
+                color: primaryBG,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(

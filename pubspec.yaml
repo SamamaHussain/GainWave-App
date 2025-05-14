@@ -48,6 +48,7 @@ dependencies:
   fl_chart: ^0.71.0
   intl: ^0.20.2
   flutter_hooks: ^0.21.2
+  url_launcher: ^6.3.1
 
 
 dev_dependencies:

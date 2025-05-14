@@ -639,7 +639,7 @@ class HistoryScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Workout History",
+                  "Weekly Volume History",
                   style: GoogleFonts.roboto(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,

@@ -130,54 +130,55 @@ class _GymChatBotState extends State<GymChatBot> {
       child: Scaffold(
         backgroundColor: primaryBG,
         appBar: AppBar(
+          elevation: 5,
           toolbarHeight: 80,
-          backgroundColor: secondaryBG,
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 10),
+          backgroundColor: primaryBG,
+          leading: const Padding(
+            padding: EdgeInsets.only(left: 30),
             child: CircleAvatar(
-              backgroundColor: primaryBG,
+              backgroundColor: Colors.black,
               child: Icon(
                 Icons.personal_injury_rounded,
                 size: 35.0,
-                color: textMain,
+                color: accentMain,
               ),
             ),
           ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "GainWave Mentor",
-                style: GoogleFonts.roboto(
-                  fontSize: 22,
-                  color: textMain,
-                ),
-              ),
-              const SizedBox(height: 2),
-              if (isLoading)
+          title: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
-                  "typing...",
+                  "GainWave Mentor",
                   style: GoogleFonts.roboto(
-                    fontSize: 12,
-                    fontStyle: FontStyle.italic,
-                    color: accentMain,
+                    fontSize: 22,
+                    color: textMain,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              if (!isLoading)
-                Text(
-                  "Online",
-                  style: GoogleFonts.roboto(
-                    fontSize: 13,
-                    color: Colors.grey,
+                const SizedBox(height: 2),
+                if (isLoading)
+                  Text(
+                    "typing...",
+                    style: GoogleFonts.roboto(
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      color: accentMain,
+                    ),
                   ),
-                ),
-            ],
+                if (!isLoading)
+                  Text(
+                    "Online",
+                    style: GoogleFonts.roboto(
+                      fontSize: 13,
+                      color: Colors.grey,
+                    ),
+                  ),
+              ],
+            ),
           ),
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert_rounded),
-            ),
           ],
         ),
         body: Padding(

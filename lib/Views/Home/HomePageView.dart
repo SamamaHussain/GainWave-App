@@ -131,7 +131,7 @@ class _home_page_viewState extends State<home_page_view> {
                                   ),
                                 ),
                                 Text(
-                                  '${firebaseServices.FirstName}',
+                                  '${firebaseServices.FirstName![0].toUpperCase()}${firebaseServices.FirstName!.substring(1)}',
                                   style: GoogleFonts.roboto(
                                     color: accentMain,
                                     fontSize: 32,
@@ -139,6 +139,7 @@ class _home_page_viewState extends State<home_page_view> {
                                     height: 1.1,
                                   ),
                                 ),
+
                               ],
                             ),
                             // InkWell(

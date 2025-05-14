@@ -54,7 +54,6 @@ class _RegisterViewState extends State<RegisterView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header
                       Text(
                         'Create your new\naccount',
                         style: GoogleFonts.roboto(
@@ -76,7 +75,6 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                       const SizedBox(height: 32),
 
-                      // First Name Field
                       Text(
                         'First Name',
                         style: GoogleFonts.roboto(
