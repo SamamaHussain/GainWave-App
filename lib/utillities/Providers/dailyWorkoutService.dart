@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
@@ -25,6 +26,22 @@ class DailyWorkoutService {
     final dateId = _formatDateForDocId(date);
     
     try {
+      // Check if date document exists
+      final dateDocRef = _firestore
+          .collection('user')
+          .doc(_userId)
+          .collection('dailyWorkoutData')
+          .doc(dateId);
+      
+      final dateDoc = await dateDocRef.get();
+      
+      // If date document doesn't exist, create it with temp field
+      if (!dateDoc.exists) {
+        await dateDocRef.set({
+          'tempField': 'temporary string value',
+        });
+      }
+      
       // Add workout to the workouts subcollection for the specific date
       await _firestore
           .collection('user')

@@ -566,6 +566,19 @@ class _ProfilePageState extends State<ProfilePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: primaryBG,
+        appBar: AppBar(
+          backgroundColor: primaryBG,
+          elevation: 0,
+          title: Text(
+            'Profile',
+            style: GoogleFonts.roboto(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          centerTitle: true,
+        ),
         body: firebaseServices.isLoading || isLoading
             ? Center(
                 child: Column(
@@ -588,31 +601,6 @@ class _ProfilePageState extends State<ProfilePage> {
             : CustomScrollView(
                 physics: const BouncingScrollPhysics(),
                 slivers: [
-                  SliverAppBar(
-                    backgroundColor: primaryBG,
-                    expandedHeight: 80,
-                    pinned: true,
-                    leading: IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Container(
-                        padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          'Profile',
-                          style: GoogleFonts.roboto(
-                            color: textMain,
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700,
-                            height: 1.1,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  
                   // Main Content
                   SliverPadding(
                     padding: EdgeInsets.fromLTRB(
@@ -626,7 +614,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Container(
                           margin: const EdgeInsets.only(bottom: 24),
                           padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
+                          decoration: BoxDecoration(border: Border.all(width: 1, color: accentMain),
                             color: secondaryBG,
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
@@ -644,14 +632,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 width: 100,
                                 height: 100,
                                 decoration: BoxDecoration(
-                                  color: accentMain,
+                                  color: const Color.fromARGB(255, 29, 29, 29),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Center(
                                   child: Text(
                                     '${firebaseServices.FirstName?[0] ?? ''}${firebaseServices.LastName?[0] ?? ''}',
                                     style: GoogleFonts.roboto(
-                                      color: primaryBG,
+                                      color: accentMain,
                                       fontSize: 36,
                                       fontWeight: FontWeight.bold,
                                     ),
