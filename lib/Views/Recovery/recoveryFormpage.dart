@@ -51,15 +51,15 @@ class _RecoveryFormPageState extends State<RecoveryFormPage> {
       prefixIcon: Icon(icon, color: accentMain),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white24),
+        borderSide: const BorderSide(color: Colors.white24),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white24),
+        borderSide: const BorderSide(color: Colors.white24),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: accentMain, width: 2),
+        borderSide: const BorderSide(color: accentMain, width: 2),
       ),
       filled: true,
       fillColor: primaryBG,
@@ -84,7 +84,7 @@ class _RecoveryFormPageState extends State<RecoveryFormPage> {
             ),
           ),
           centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: Container(
           color: primaryBG,
@@ -204,8 +204,8 @@ class _RecoveryFormPageState extends State<RecoveryFormPage> {
                                 return 'Please enter your age';
                               }
                               int? age = int.tryParse(value);
-                              if (age == null || age < 10 || age > 100) {
-                                return 'Enter a valid age (10-100)';
+                              if (age == null || age < 15 || age > 120) {
+                                return 'Your age must be (15-120)';
                               }
                               return null;
                             },
@@ -224,8 +224,8 @@ class _RecoveryFormPageState extends State<RecoveryFormPage> {
                                 return 'Please enter your weight';
                               }
                               double? weight = double.tryParse(value);
-                              if (weight == null || weight < 30 || weight > 200) {
-                                return 'Enter a valid weight (30-200 kg)';
+                              if (weight == null || weight < 30 || weight > 600) {
+                                return 'Enter a valid weight (30-600 kg)';
                               }
                               return null;
                             },
@@ -273,23 +273,58 @@ class _RecoveryFormPageState extends State<RecoveryFormPage> {
                           const SizedBox(height: 16),
                   
                           // Muscle Soreness Input
-                          TextFormField(
-                            controller: _sorenessController,
-                            keyboardType: TextInputType.number,
-                            style: GoogleFonts.roboto(color: Colors.white),
-                            decoration: _buildInputDecoration(
-                                'Muscle Soreness', 'Rate soreness (1-10)', Icons.accessibility_new_outlined),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your soreness level';
-                              }
-                              double? soreness = double.tryParse(value);
-                              if (soreness == null || soreness < 1 || soreness > 10) {
-                                return 'Enter valid soreness level (1-10)';
-                              }
-                              return null;
-                            },
-                          ),
+                          // TextFormField(
+                          //   controller: _sorenessController,
+                          //   keyboardType: TextInputType.number,
+                          //   style: GoogleFonts.roboto(color: Colors.white),
+                          //   decoration: _buildInputDecoration(
+                          //       'Muscle Soreness', 'Rate soreness (1-10)', Icons.accessibility_new_outlined),
+                          //   validator: (value) {
+                          //     if (value == null || value.isEmpty) {
+                          //       return 'Please enter your soreness level';
+                          //     }
+                          //     double? soreness = double.tryParse(value);
+                          //     if (soreness == null || soreness < 1 || soreness > 10) {
+                          //       return 'Enter valid soreness level (1-10)';
+                          //     }
+                          //     return null;
+                          //   },
+                          // ),
+                          Row(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Expanded(
+      child: TextFormField(
+        controller: _sorenessController,
+        keyboardType: TextInputType.number,
+        style: GoogleFonts.roboto(color: Colors.white),
+        decoration: _buildInputDecoration(
+            'Muscle Soreness', 'Rate soreness (1-10)', Icons.accessibility_new_outlined),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your soreness level';
+          }
+          double? soreness = double.tryParse(value);
+          if (soreness == null || soreness < 1 || soreness > 10) {
+            return 'Enter valid soreness level (1-10)';
+          }
+          return null;
+        },
+      ),
+    ),
+    const Padding(
+      padding: EdgeInsets.only(top: 12, left: 4),
+      child: Tooltip(
+        message: '1 = Low level soreness, 10 = Extreme soreness/pain',
+        child: Icon(
+          Icons.info_outline,
+          size: 18,
+          color: Colors.white70,
+        ),
+      ),
+    ),
+  ],
+),
                         ],
                       ),
                     ),

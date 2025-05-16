@@ -118,7 +118,7 @@ class _VolumeTrackerScreenState extends State<VolumeTrackerScreen> {
 
         debugPrint("✅ Volume saved to Firestore for $dateKey");
       } else {
-        debugPrint("⚠️ No user is signed in.");
+        debugPrint("⚠ No user is signed in.");
       }
     } catch (e) {
       debugPrint("❌ Failed to save volume to Firestore: $e");
@@ -126,12 +126,42 @@ class _VolumeTrackerScreenState extends State<VolumeTrackerScreen> {
   }
 
   /// Remove Exercise from the List
+  // void _removeExercise(int index) {
+  //   setState(() {
+  //     _exerciseData["General"]?.removeAt(index);
+  //     _updateVolume();
+  //   });
+  // }
+
   void _removeExercise(int index) {
-    setState(() {
-      _exerciseData["General"]?.removeAt(index);
-      _updateVolume();
-    });
-  }
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirm Deletion'),
+        content: const Text('Are you sure you want to delete this exercise?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Delete'),
+            onPressed: () {
+              setState(() {
+                _exerciseData["General"]?.removeAt(index);
+                _updateVolume();
+              });
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
   // Load Data for the Selected Date
   void _loadData() async {
@@ -576,7 +606,7 @@ class HistoryScreen extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      debugPrint("⚠️ No user signed in.");
+      debugPrint("⚠ No user signed in.");
       return [];
     }
 

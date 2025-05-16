@@ -520,7 +520,9 @@ class _WorkoutAnalysisScreenState extends State<WorkoutAnalysisScreen> {
           'muscleGroup': workout['muscleGroup'],
           'sets': workout['sets'],
           'reps': workout['reps'],
-          'weight': workout['weight'],
+          // Safely handle optional fields
+          'weight': workout['weight'] ?? 0,
+          'restTime': workout['restTime'] ?? '',
         });
       }
     }

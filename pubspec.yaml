@@ -49,7 +49,7 @@ dependencies:
   intl: ^0.20.2
   flutter_hooks: ^0.21.2
   url_launcher: ^6.3.1
-
+  flutter_markdown: ^0.6.17
 
 dev_dependencies:
   flutter_test:

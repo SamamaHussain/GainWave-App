@@ -6,20 +6,20 @@ import 'package:gain_wave_app/utillities/widgets/CustomWidgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-class email_verify extends StatefulWidget {
-  const email_verify({super.key});
+class EmailVerifyView extends StatefulWidget {
+  const EmailVerifyView({super.key});
 
   @override
-  State<email_verify> createState() => _email_verifyState();
+  State<EmailVerifyView> createState() => _EmailVerifyViewState();
 }
 
-class _email_verifyState extends State<email_verify> {
+class _EmailVerifyViewState extends State<EmailVerifyView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryBG,
       body: Padding(
-        padding: EdgeInsets.fromLTRB(16, 30, 16, 30),
+        padding: EdgeInsets.fromLTRB(16, 60, 16, 30),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

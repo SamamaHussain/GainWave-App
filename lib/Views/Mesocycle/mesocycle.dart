@@ -185,11 +185,43 @@ class MesocycleTracker extends HookWidget {
       frequencyController.clear();
     }
 
-    void deleteMesocycle(String id) {
-      mesocycles.value = mesocycles.value.where((m) => m['id'] != id).toList();
-      deleteMesocycleFromFirebase(id);
-    }
+    // void deleteMesocycle(String id) {
+    //   mesocycles.value = mesocycles.value.where((m) => m['id'] != id).toList();
+    //   deleteMesocycleFromFirebase(id);
+    // }
 
+  void deleteMesocycle(String id, BuildContext context) {
+  // Show confirmation dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Delete Mesocycle'),
+        content: const Text('Are you sure you want to delete this mesocycle? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // User clicked "No", just close the dialog
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              // User confirmed deletion, proceed with delete operation
+              mesocycles.value = mesocycles.value.where((m) => m['id'] != id).toList();
+              deleteMesocycleFromFirebase(id);
+              
+              // Close the dialog
+              Navigator.of(context).pop();
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      );
+    },
+  );
+}
     void logSession(String id, int week, String notes) {
       final updated = mesocycles.value.map((meso) {
         if (meso['id'] == id) {
@@ -238,7 +270,7 @@ class MesocycleTracker extends HookWidget {
               children: [
                 _buildTextField(nameController, 'Name', accentMain),
                 const SizedBox(height: 12),
-                _buildTextField(weeksController, 'Weeks', accentMain, inputType: TextInputType.number),
+                _buildWeekTextField(weeksController, 'Weeks', accentMain, inputType: TextInputType.number),
                 const SizedBox(height: 12),
                 _buildTextField(goalController, 'Goal', accentMain),
                 const SizedBox(height: 12),
@@ -364,11 +396,11 @@ class MesocycleTracker extends HookWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 41, 61, 23),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 41, 61, 23),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.fitness_center, 
                       size: 30, 
                       color: accentMain
@@ -376,18 +408,29 @@ class MesocycleTracker extends HookWidget {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: Text(
-                      meso['name'],
-                      style: GoogleFonts.roboto(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    child: Column(
+                      children: [
+                         Text('Mesocycle Name',
+                        style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),),
+                        SizedBox(height: 5,),
+                        Text(
+                          meso['name'],
+                          style: GoogleFonts.roboto(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
-                    onPressed: () => deleteMesocycle(meso['id']),
+                    onPressed: () => deleteMesocycle(meso['id'],context),
                   ),
                 ],
               ),
@@ -459,11 +502,11 @@ class MesocycleTracker extends HookWidget {
                               hintStyle: GoogleFonts.roboto(color: Colors.white54),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.white24),
+                                borderSide: const BorderSide(color: Colors.white24),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: accentMain),
+                                borderSide: const BorderSide(color: accentMain),
                               ),
                             ),
                           ),
@@ -579,7 +622,7 @@ class MesocycleTracker extends HookWidget {
         // centerTitle: true,
       ),
       body: isLoading.value
-          ? Center(child: CircularProgressIndicator(color: accentMain))
+          ? const Center(child: CircularProgressIndicator(color: accentMain))
           : mesocycles.value.isEmpty
               ? Center(
                   child: Column(
@@ -646,6 +689,46 @@ class MesocycleTracker extends HookWidget {
         ),
       ),
     );
+  }
+
+    Widget _buildWeekTextField(
+    TextEditingController controller, 
+    String label, 
+    Color accentColor,
+    {TextInputType inputType = TextInputType.text}
+  ) {
+    return TextField(
+  controller: controller,
+  keyboardType: TextInputType.number,
+  inputFormatters: [
+    FilteringTextInputFormatter.digitsOnly,
+  ],
+  onChanged: (value) {
+    if (value.isNotEmpty && int.tryParse(value) != null) {
+      int val = int.parse(value);
+      if (val <= 1) {
+        controller.text = '2'; // Set to minimum acceptable value
+        controller.selection = TextSelection.fromPosition(
+          TextPosition(offset: controller.text.length),
+        );
+      }
+    }
+  },
+  style: GoogleFonts.roboto(color: Colors.white),
+  decoration: InputDecoration(
+    labelText: label,
+    labelStyle: GoogleFonts.roboto(color: Colors.white70),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: const BorderSide(color: Colors.white24),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: accentColor),
+    ),
+  ),
+);
+
   }
 
   Widget _buildFrequencyTextField(

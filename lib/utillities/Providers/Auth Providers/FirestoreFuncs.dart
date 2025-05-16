@@ -11,8 +11,8 @@ class FirestoreFuncs {
 final CollectionReference User=FirebaseFirestore.instance.collection('user');
 
 //Adding New User Doc
-Future <void> saveUser (String? Uid,String FirstName,String LastName,String Email){
-  userModel = UserModel(FirstName: FirstName, LastName: LastName, Email: Email, Uid: Uid, CreatedAt: Timestamp.now());
+Future <void> saveUser (String? Uid,String FirstName,String LastName,String Email,String Age,String Height,String Weight) async{
+  userModel = UserModel(FirstName: FirstName, LastName: LastName, Email: Email, Uid: Uid, CreatedAt: Timestamp.now(), Age: Age, Height: Height, Weight: Weight);   
    return  User.doc(userModel!.Uid).set(
     {
       'FirstName':userModel!.FirstName,
@@ -20,6 +20,9 @@ Future <void> saveUser (String? Uid,String FirstName,String LastName,String Emai
       'Email':userModel!.Email,
       'uid':userModel!.Uid,
       'CreatedAt':userModel!.CreatedAt,
+      'Age':userModel!.Age,
+      'height':userModel!.Height,
+      'weight':userModel!.Weight,
     }
     
    );
@@ -32,7 +35,10 @@ Future <void> saveUser (String? Uid,String FirstName,String LastName,String Emai
        if (userDoc.exists) {
         String firstName=userDoc['FirstName'];
         String lastName=userDoc['LastName'];
-        Map<String,String>? NameMap={'firstName':firstName,'lastName':lastName};
+        String Age=userDoc['Age'];
+        String height=userDoc['height'];
+        String weight=userDoc['weight'];
+        Map<String,String>? NameMap={'firstName':firstName,'lastName':lastName,'Age':Age,'height':height,'weight':weight};
         log('From GetUser Func: $Uid');
         return NameMap;
        }

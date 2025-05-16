@@ -16,12 +16,18 @@ class FirebaseServices extends ChangeNotifier {
   String? uid;
   String? FirstName;
   String? LastName;
+  String? Age;
+  String? Height;
+  String? Weight;
   bool isLoading = true;
 
   final TextEditingController EmailController = TextEditingController();
   final TextEditingController PasswordController = TextEditingController();
   final TextEditingController FirstNameController = TextEditingController();
   final TextEditingController LastNameController = TextEditingController();
+  final TextEditingController AgeController = TextEditingController();
+  final TextEditingController HeightController = TextEditingController();
+  final TextEditingController WeightController = TextEditingController();
 
   void GetCurrentUserID() {
     user = FirebaseAuth.instance.currentUser;
@@ -43,6 +49,14 @@ class FirebaseServices extends ChangeNotifier {
       FirstName = userData['firstName'];
       log('getUserData: $FirstName');
       LastName = userData['lastName'];
+      log('getUserData: $FirstName');
+      Age = userData['Age'];
+      log('getUserData: $Age');
+      Height = userData['height'];
+      log('getUserData: $Height');
+      Weight = userData['weight'];
+      log('getUserData: $Weight');
+
       notifyListeners();
     }
     isLoading = false;
@@ -111,11 +125,11 @@ class FirebaseServices extends ChangeNotifier {
         uid = userCredential!.user!.uid;
         log('User UID: $uid');
         firestoreFuncs.saveUser(uid, FirstNameController.text,
-            LastNameController.text, EmailController.text);
+            LastNameController.text, EmailController.text,AgeController.text, HeightController.text, WeightController.text);
       } else {
         log('User creation failed.');
       }
-      Navigator.of(Context).pushNamed('/emailVerifyRoute');
+      Navigator.of(Context).pushNamedAndRemoveUntil('/emailVerifyRoute',(route) => false,);
     } on FirebaseAuthException catch (e) {
        if (e.code == 'invalid-email') {
         showSnackBar(Context, 'The email address is invalid');
@@ -165,5 +179,15 @@ class FirebaseServices extends ChangeNotifier {
     // _isLoading = false;
     notifyListeners();
   }
+}
+
+
+Future<void> resetPassword(String email) async {
+  if (email.isEmpty) {
+    throw Exception('Email is empty');
+  }
+  
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
 }
 }

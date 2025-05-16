@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
           '/loginRoute': (context) => const LoginView(),
           '/registerRoute': (context) => const RegisterView(),
           '/homeRoute': (context) => const PageNavController(),
-          '/emailVerifyRoute': (context) => const email_verify(),
+          '/emailVerifyRoute': (context) => const EmailVerifyView(),
           '/workoutPlanningRoute': (context) => const WorkoutPlannerScreen(),
           '/mesocycleRoute': (context) => const MesocycleTracker(),
           '/recommendarRoute': (context) => const ExerciseRecommendation(),

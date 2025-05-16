@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:gain_wave_app/Views/About%20&%20Support/aboutandSupport.dart';
+import 'package:gain_wave_app/main.dart';
 import 'package:gain_wave_app/utillities/Providers/Auth%20Providers/FirebaseServices.dart';
 import 'package:gain_wave_app/utillities/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -124,6 +124,50 @@ class _ProfilePageState extends State<ProfilePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to update profile'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  // Password reset functionality
+  Future<void> _sendPasswordResetEmail() async {
+    final firebaseServices = Provider.of<FirebaseServices>(context, listen: false);
+    if (firebaseServices.user?.email == null) return;
+    
+    setState(() {
+      isLoading = true;
+    });
+    
+    try {
+      // Send password reset email using Firebase Auth
+      await firebaseServices.resetPassword(firebaseServices.user!.email!);
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Password reset email sent to ${firebaseServices.user!.email}',
+            style: GoogleFonts.roboto(
+              color: accentMain,
+              fontSize: 16,
+            ),
+          ),
+          backgroundColor: secondaryBG,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    } catch (e) {
+      print('Error sending password reset email: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to send password reset email'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -466,6 +510,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         const SizedBox(height: 16),
+                        _buildBodyStatsTile(age: firebaseServices.Age, height: firebaseServices.Height, weight: firebaseServices.Weight),
+                        const SizedBox(height: 16),
+                        _buildSettingItem(
+                          title: 'Change Password',
+                          icon: Icons.lock_reset_rounded,
+                          onTap: _showPasswordChangeDialog,
+                        ),
                         _buildSettingItem(
                           title: 'About & Support',
                           icon: Icons.help_rounded,
@@ -496,6 +547,78 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
+      ),
+    );
+  }
+
+  // Password reset dialog
+  void _showPasswordChangeDialog() {
+    final firebaseServices = Provider.of<FirebaseServices>(context, listen: false);
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: secondaryBG,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(
+          'Change Password',
+          style: GoogleFonts.roboto(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'We\'ll send a password reset link to:',
+              style: GoogleFonts.roboto(
+                color: Colors.white70,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              firebaseServices.user?.email ?? '',
+              style: GoogleFonts.roboto(
+                color: accentMain,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Follow the link in the email to set a new password.',
+              style: GoogleFonts.roboto(
+                color: Colors.white70,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.white70,
+            ),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _sendPasswordResetEmail();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: accentMain,
+              foregroundColor: primaryBG,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text('Send Reset Link'),
+          ),
+        ],
       ),
     );
   }
@@ -546,4 +669,62 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
+
+  Widget _buildBodyStatsTile({
+  required String? age,
+  required String? height,
+  required String? weight,
+}) {
+  return Container(
+    height: 70,
+    margin: const EdgeInsets.only(bottom: 12),
+    decoration: BoxDecoration(
+      color: secondaryBG,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          // Age
+          _buildStatColumn(label: "Age", value: firebaseServices.Age),
+
+          // Height
+          _buildStatColumn(label: "Height", value: firebaseServices.Height),
+
+          // Weight
+          _buildStatColumn(label: "Weight", value: firebaseServices.Weight),
+        ],
+      ),
+    ),
+  );
 }
+
+Widget _buildStatColumn({required String label, required String? value}) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        label,
+        style: GoogleFonts.roboto(
+          color: Colors.white.withOpacity(0.6),
+          fontSize: 13,
+        ),
+      ),
+      const SizedBox(height: 4),
+      Text(
+        value!,
+        style: GoogleFonts.roboto(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 15,
+        ),
+      ),
+    ],
+  );
+}
+
+}
+

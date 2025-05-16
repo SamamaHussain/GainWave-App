@@ -439,7 +439,7 @@ class ExerciseRecommendation extends HookWidget {
 
       try {
         final res = await http.post(
-          Uri.parse("http://127.0.0.1:5000/predict"), // Update if hosted remotely
+          Uri.parse("http://10.120.83.226:5000/predict"), // Update if hosted remotely
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(userData),
         );
@@ -640,7 +640,7 @@ class ExerciseRecommendation extends HookWidget {
                         if (v == null || v.isEmpty) return "Required";
                         try {
                           final value = int.parse(v);
-                          if (value <= 0 || value > 120) return "Invalid age";
+                          if (value <= 15 || value > 120) return "age range 15-120";
                         } catch (_) {
                           return "Numbers only";
                         }
@@ -701,7 +701,7 @@ class ExerciseRecommendation extends HookWidget {
                         if (v == null || v.isEmpty) return "Required";
                         try {
                           final value = double.parse(v);
-                          if (value <= 0 || value > 300) return "Invalid weight";
+                          if (value <= 30 || value > 600) return "weight must be more than 30 and less than 600";
                         } catch (_) {
                           return "Numbers only";
                         }
@@ -720,7 +720,7 @@ class ExerciseRecommendation extends HookWidget {
                         if (v == null || v.isEmpty) return "Required";
                         try {
                           final value = double.parse(v);
-                          if (value <= 0 || value > 2.5) return "Invalid height";
+                          if (value <= 1.4 || value > 2.5) return "height must be from 1.4-2.5";
                         } catch (_) {
                           return "Numbers only";
                         }
@@ -749,7 +749,7 @@ class ExerciseRecommendation extends HookWidget {
                         if (v == null || v.isEmpty) return "Required";
                         try {
                           final value = double.parse(v);
-                          if (value <= 0 || value > 10) return "Invalid duration";
+                          if (value <= 1 || value > 3) return "Enter between 1-3";
                         } catch (_) {
                           return "Numbers only";
                         }
@@ -769,7 +769,7 @@ class ExerciseRecommendation extends HookWidget {
                         if (v == null || v.isEmpty) return "Required";
                         try {
                           final value = int.parse(v);
-                          if (value <= 0 || value > 7) return "Max 7 days";
+                          if (value <= 2 || value > 7) return "Min 2 days, Max 7 days";
                         } catch (_) {
                           return "Numbers only";
                         }
@@ -827,14 +827,14 @@ class ExerciseRecommendation extends HookWidget {
                 children: [
                   Expanded(
                     child: inputField(
-                      "Calories Burned", 
+                      "Calories to Burn", 
                       calories, 
                       suffixText: "kcal",
                       validator: (v) {
                         if (v == null || v.isEmpty) return "Required";
                         try {
                           final value = double.parse(v);
-                          if (value < 0 || value > 5000) return "Invalid value";
+                          if (value < 50 || value > 5000) return "value must be above 50";
                         } catch (_) {
                           return "Numbers only";
                         }
@@ -852,7 +852,7 @@ class ExerciseRecommendation extends HookWidget {
                         if (v == null || v.isEmpty) return "Required";
                         try {
                           final value = double.parse(v);
-                          if (value < 0 || value > 100) return "Invalid percentage";
+                          if (value < 1 || value > 80) return "percentage must be 1-80";
                         } catch (_) {
                           return "Numbers only";
                         }
@@ -871,7 +871,7 @@ class ExerciseRecommendation extends HookWidget {
                   if (v == null || v.isEmpty) return "Required";
                   try {
                     final value = double.parse(v);
-                    if (value < 0 || value > 10) return "Invalid value";
+                    if (value < 0 || value > 10) return "value must be 1-10 liters";
                   } catch (_) {
                     return "Numbers only";
                   }
@@ -1033,7 +1033,7 @@ class ExerciseRecommendation extends HookWidget {
                     ),
                   ),
                   onPressed: () {
-                    // Save functionality would go here
+                    // Save functionality would go here 
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(

@@ -52,11 +52,27 @@ class _WorkoutFeedbackScreenState extends State<WorkoutFeedbackScreen> {
   }
 
   void _submitWorkoutDetails() {
-    if (_repsController.text.isEmpty ||
-        _setsController.text.isEmpty ||
-        _weightController.text.isEmpty) {
+    // if (_repsController.text.isEmpty ||
+    //     _setsController.text.isEmpty ||
+    //     _weightController.text.isEmpty) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('Please fill all fields')),
+    //   );
+    //   return;
+    // }
+    final int? reps = int.tryParse(_repsController.text);
+    final int? sets = int.tryParse(_setsController.text);
+    final double? weight = double.tryParse(_weightController.text);
+
+    if (reps == null || sets == null || weight == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
+        const SnackBar(content: Text('Please enter valid numbers for reps, sets, and weight.')),
+      );
+      return;
+    }
+    if (reps < 1 || sets < 1 || weight < 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Reps, sets, and weight must be at least 1.')),
       );
       return;
     }
