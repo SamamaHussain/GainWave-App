@@ -49,10 +49,6 @@ Please ⭐ star the repo if you find it helpful!
 
 ## 🤓 Author
 
-**[Your Name]**  
-[GitHub Profile](https://github.com/your-username)
-
-## 🔖 License
-
-[MIT](LICENSE)
+**Samama Hussain**  
+[GitHub Profile](https://github.com/SamamaHussain)
 
