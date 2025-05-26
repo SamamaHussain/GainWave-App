@@ -44,8 +44,11 @@ Please ⭐ star the repo if you find it helpful!
 | **Flutter**                          | Cross-platform app development           |
 | **Firebase**                         | Authentication and backend               |
 | **Provider**                         | State management                         |
+| **google_generative_ai**             | Gemini API and AI chat bot               |
 | **fl_chart**                         | Graphs and visual analytics              |
 | **flutter_dev**                      | General Flutter utility enhancements     |
+| **google_fonts**                     | Provides Google fonts                    |
+| **google_nav_bar**                   | Dynamic and Modern Navigatiion bar       |
 
 ## 🤓 Author
 
